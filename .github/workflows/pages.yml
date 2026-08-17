@@ -1,0 +1,60 @@
+name: Deploy a GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un despliegue a la vez; no cancela el que ya está corriendo.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar que existen los assets que precachea el service worker
+        run: |
+          missing=0
+          # Extrae las rutas './...' del array CORE_ASSETS de sw.js
+          paths=$(sed -n '/const CORE_ASSETS/,/\];/p' sw.js | grep -oE "'\./[^']+'" | tr -d "'")
+          for p in $paths; do
+            if [ ! -f "$p" ]; then
+              echo "::error file=sw.js::CORE_ASSETS apunta a un archivo inexistente: $p"
+              missing=1
+            fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            echo "addAll() falla entero si una sola URL da 404 — el offline quedaría roto."
+            exit 1
+          fi
+          echo "OK: todos los assets precacheados existen."
+
+      - name: Validar manifest.json
+        run: python3 -c "import json;json.load(open('manifest.json'));print('OK: manifest.json es JSON válido')"
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

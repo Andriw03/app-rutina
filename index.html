@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rutina TKD · Panel de entrenamiento</title>
+<meta name="description" content="Panel de entrenamiento de 4 días complementario a taekwondo: cronómetros de descanso, circuito y AMRAP, videos de técnica y progreso por sesión.">
+<meta name="theme-color" content="#0B0D10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rutina TKD">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/plexmono-500-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* ---------- FUENTES AUTO-HOSPEDADAS (subset latin, cubre español) ---------- */
+  @font-face{
+    font-family:'Inter'; font-style:normal; font-weight:400 600; font-display:swap;
+    src:url('fonts/inter-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'Oswald'; font-style:normal; font-weight:500 700; font-display:swap;
+    src:url('fonts/oswald-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'IBM Plex Mono'; font-style:normal; font-weight:500; font-display:swap;
+    src:url('fonts/plexmono-500-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+  @font-face{
+    font-family:'IBM Plex Mono'; font-style:normal; font-weight:600 700; font-display:swap;
+    src:url('fonts/plexmono-600-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+  :root{
+    --bg:#0B0D10;
+    --surface:#15181C;
+    --surface-2:#1B1F24;
+    --border:#262B31;
+    --text:#F2F0EA;
+    --text-muted:#9AA1AA;
+    --red:#E63946;
+    --red-dim:#3A1418;
+    --teal:#2DD4BF;
+    --teal-dim:#0F2D2A;
+    --green:#4ADE80;
+    --gold:#F2C14E;
+    --radius:14px;
+    --safe-t:env(safe-area-inset-top, 0px);
+    --safe-b:env(safe-area-inset-bottom, 0px);
+    --safe-l:env(safe-area-inset-left, 0px);
+    --safe-r:env(safe-area-inset-right, 0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(48px + var(--safe-b));
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{
+    font-family:'Oswald','Inter',system-ui,sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition-duration:.01ms !important; animation-duration:.01ms !important;}
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, var(--bg) 70%, rgba(11,13,16,0.92));
+    backdrop-filter:blur(6px);
+    padding:calc(14px + var(--safe-t)) calc(16px + var(--safe-r)) 10px calc(16px + var(--safe-l));
+    border-bottom:1px solid var(--border);
+  }
+  .header-top{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:10px; gap:10px;
+  }
+  .brand{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; min-width:0;}
+  .brand .display{font-size:19px; font-weight:700; color:var(--text);}
+  .brand .tag{font-size:11px; color:var(--text-muted); font-family:'IBM Plex Mono',ui-monospace,monospace;}
+  .header-actions{display:flex; align-items:center; gap:8px; flex:none;}
+  .icon-btn{
+    background:var(--surface); border:1px solid var(--border); color:var(--text);
+    width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:15px; cursor:pointer; padding:0;
+  }
+  .icon-btn:active{transform:scale(0.94);}
+  .session-clock{
+    display:flex; align-items:center; gap:6px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:6px 8px; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:14px;
+  }
+  .session-clock button{
+    background:var(--red); color:#fff; border:none; border-radius:7px;
+    font-family:'Inter',system-ui,sans-serif; font-size:11px; font-weight:600;
+    padding:5px 9px; cursor:pointer; text-transform:uppercase; letter-spacing:.03em;
+  }
+  .session-clock.running button{background:var(--surface-2); color:var(--text); border:1px solid var(--border);}
+  .session-reset{
+    background:none !important; border:1px solid var(--border) !important; color:var(--text-muted) !important;
+    padding:4px 7px !important; font-size:12px !important;
+  }
+  .session-reset[hidden]{display:none;}
+
+  /* Belt progress bar (signature element) */
+  .belt{
+    display:flex; gap:3px; height:9px; border-radius:5px; overflow:hidden;
+    background:var(--surface-2); margin-bottom:10px; border:1px solid var(--border);
+  }
+  .belt-seg{flex:1; background:transparent; transition:background .35s ease;}
+  .belt-seg.on:nth-child(6n+1){background:#EDEDED;}
+  .belt-seg.on:nth-child(6n+2){background:#F2C14E;}
+  .belt-seg.on:nth-child(6n+3){background:#3FA34D;}
+  .belt-seg.on:nth-child(6n+4){background:#2E6FE6;}
+  .belt-seg.on:nth-child(6n+5){background:var(--red);}
+  .belt-seg.on:nth-child(6n+0){background:#111214; box-shadow:inset 0 0 0 1px #3a3a3a;}
+  .belt-label{font-size:10.5px; color:var(--text-muted); font-family:'IBM Plex Mono',ui-monospace,monospace; margin-bottom:12px; display:flex; justify-content:space-between;}
+
+  /* Day tabs */
+  .tabs{display:flex; gap:6px;}
+  .tab{
+    flex:1; text-align:center; padding:9px 4px; border-radius:10px;
+    background:var(--surface); border:1px solid var(--border);
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11.5px; color:var(--text-muted);
+    cursor:pointer; line-height:1.3;
+  }
+  .tab b{display:block; font-family:'Oswald','Inter',sans-serif; font-size:14px; color:var(--text); letter-spacing:.02em;}
+  .tab[aria-selected="true"]{background:var(--red-dim); border-color:var(--red); color:#ffb4ba;}
+  .tab[aria-selected="true"] b{color:#fff;}
+
+  /* ---------- MAIN ---------- */
+  main{
+    padding:16px calc(16px + var(--safe-r)) 16px calc(16px + var(--safe-l));
+    max-width:640px; margin:0 auto;
+  }
+  .day-head{margin-bottom:14px;}
+  .day-head h2{font-size:22px; color:var(--text);}
+  .day-head .focus{font-size:13.5px; color:var(--text-muted); margin-top:2px;}
+  .day-head .sub{display:inline-block; margin-top:8px; font-size:11px; font-family:'IBM Plex Mono',ui-monospace,monospace; color:var(--teal); background:var(--teal-dim); padding:3px 8px; border-radius:6px; border:1px solid #1c4d47;}
+
+  .block-title{
+    font-family:'IBM Plex Mono',ui-monospace,monospace; text-transform:uppercase; letter-spacing:.08em;
+    font-size:11px; color:var(--text-muted); margin:20px 0 8px; display:flex; align-items:center; gap:8px;
+  }
+  .block-title::after{content:''; flex:1; height:1px; background:var(--border);}
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:12px; margin-bottom:10px; display:flex; gap:12px; align-items:flex-start;
+    transition:border-color .2s, background .2s;
+  }
+  .card.done{border-color:var(--green); background:linear-gradient(180deg, rgba(74,222,128,0.06), var(--surface));}
+  .vid-thumb{
+    width:64px; height:64px; flex:none; background:var(--surface-2); border-radius:10px;
+    border:1px solid var(--border); position:relative; cursor:pointer; overflow:hidden; padding:0;
+  }
+  .vid-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+  .vid-thumb::after{
+    content:''; position:absolute; inset:0; background:rgba(0,0,0,0.28);
+  }
+  .vid-thumb .play{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:1;
+  }
+  .vid-thumb .play svg{width:20px; height:20px; fill:#fff; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.6));}
+  .vid-thumb:active{transform:scale(0.96);}
+  .card.done .vid-thumb{border-color:var(--green);}
+  .card-body{flex:1; min-width:0;}
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .ex-name{font-size:14.5px; font-weight:600; line-height:1.3;}
+  .chk{
+    width:26px; height:26px; border-radius:7px; border:1.5px solid var(--border);
+    background:var(--surface-2); flex:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:transparent; font-size:14px; padding:0; line-height:1;
+  }
+  .card.done .chk,
+  .circuit-card.done .chk{background:var(--green); border-color:var(--green); color:#0B0D10;}
+  .meta-row{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; align-items:center;}
+  .chip{
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; background:var(--surface-2);
+    border:1px solid var(--border); border-radius:7px; padding:3px 8px; color:var(--text);
+  }
+  .rest-btn{
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; background:var(--teal-dim);
+    border:1px solid #1c4d47; border-radius:7px; padding:4px 9px; color:var(--teal); cursor:pointer;
+  }
+  .rest-btn:active{transform:scale(0.96);}
+  .note{font-size:12.5px; color:var(--text-muted); margin-top:6px; line-height:1.4;}
+
+  .warmup-card{
+    background:var(--surface-2); border:1px dashed var(--border); border-radius:var(--radius);
+    padding:12px 14px; margin-bottom:14px; font-size:13px; color:var(--text-muted);
+  }
+  .warmup-card b{color:var(--text); font-family:'Oswald','Inter',sans-serif; font-size:13px; letter-spacing:.02em; text-transform:uppercase;}
+
+  .circuit-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-bottom:14px;
+    transition:border-color .2s, background .2s;
+  }
+  .circuit-card.done{border-color:var(--green); background:linear-gradient(180deg, rgba(74,222,128,0.06), var(--surface));}
+  .circuit-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:10px;}
+  .circuit-head h3{font-size:15px;}
+  .circuit-head-right{display:flex; align-items:center; gap:9px;}
+  .circuit-meta{font-size:11.5px; color:var(--text-muted); font-family:'IBM Plex Mono',ui-monospace,monospace;}
+  .circuit-list{display:flex; flex-direction:column; gap:8px; margin-bottom:12px;}
+  .circuit-item{display:flex; align-items:center; gap:10px; font-size:13px;}
+  .circuit-item .vid-thumb{width:44px; height:44px; border-radius:9px;}
+  .circuit-item .vid-thumb .play svg{width:16px; height:16px;}
+  .circuit-item .detail{color:var(--text-muted); font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; margin-left:auto;}
+  .primary-btn{
+    width:100%; padding:12px; border-radius:10px; border:none; background:var(--red); color:#fff;
+    font-family:'Oswald','Inter',sans-serif; letter-spacing:.03em; text-transform:uppercase; font-size:14px; font-weight:600;
+    cursor:pointer;
+  }
+  .primary-btn:active{transform:scale(0.98);}
+  .round-row{display:flex; align-items:center; justify-content:center; gap:14px; margin-top:10px;}
+  .round-row .n{font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:22px; min-width:90px; text-align:center;}
+  .round-btn{width:38px; height:38px; border-radius:10px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-size:18px; cursor:pointer; padding:0;}
+
+  /* ---------- TIMER OVERLAY ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(6,7,9,0.94); z-index:100;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:calc(24px + var(--safe-t)) 24px calc(24px + var(--safe-b)); text-align:center;
+  }
+  .overlay[hidden]{display:none;}
+  .overlay .ex-label{font-family:'Oswald','Inter',sans-serif; text-transform:uppercase; font-size:15px; color:var(--text-muted); letter-spacing:.03em; margin-bottom:18px; max-width:280px;}
+  .ring-wrap{position:relative; width:230px; height:230px;}
+  .ring-wrap svg{transform:rotate(-90deg);}
+  .ring-bg{fill:none; stroke:var(--surface-2); stroke-width:10;}
+  .ring-fg{fill:none; stroke:var(--teal); stroke-width:10; stroke-linecap:round; transition:stroke-dashoffset .2s linear, stroke .3s;}
+  .ring-fg.warn{stroke:var(--red);}
+  .ring-fg.done{stroke:var(--green);}
+  .ring-time{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:44px; font-weight:600;
+  }
+  .overlay-actions{display:flex; gap:10px; margin-top:26px; flex-wrap:wrap; justify-content:center;}
+  .ghost-btn{
+    background:var(--surface); border:1px solid var(--border); color:var(--text);
+    padding:11px 16px; border-radius:10px; font-size:13px; cursor:pointer; font-family:'Inter',system-ui,sans-serif;
+  }
+  .close-x{
+    position:absolute; top:calc(16px + var(--safe-t)); right:calc(16px + var(--safe-r));
+    background:var(--surface); border:1px solid var(--border); color:var(--text-muted);
+    width:38px; height:38px; border-radius:10px; font-size:18px; cursor:pointer; line-height:1;
+  }
+
+  /* ---------- VIDEO MODAL ---------- */
+  .video-modal{
+    position:fixed; inset:0; background:rgba(6,7,9,0.94); z-index:110;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:calc(16px + var(--safe-t)) 16px calc(16px + var(--safe-b));
+  }
+  .video-modal[hidden]{display:none;}
+  .video-modal .ex-label{font-family:'Oswald','Inter',sans-serif; text-transform:uppercase; font-size:14px; color:var(--text); letter-spacing:.02em; margin-bottom:12px; text-align:center; max-width:480px;}
+  .video-frame-wrap{width:100%; max-width:480px; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; border:1px solid var(--border);}
+  .video-frame-wrap iframe{width:100%; height:100%; border:0; display:block;}
+  .video-modal-actions{display:flex; gap:10px; margin-top:16px;}
+  .yt-link{
+    display:inline-flex; align-items:center; gap:6px; color:var(--text-muted); font-size:12.5px;
+    text-decoration:none; border:1px solid var(--border); border-radius:8px; padding:8px 12px; background:var(--surface);
+  }
+
+  /* ---------- INFO MODAL ---------- */
+  .modal{
+    position:fixed; inset:0; background:rgba(6,7,9,0.85); z-index:90;
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  .modal[hidden]{display:none;}
+  .modal-sheet{
+    background:var(--surface); border-top:1px solid var(--border); border-radius:18px 18px 0 0;
+    width:100%; max-width:640px; max-height:82vh; overflow-y:auto;
+    padding:20px 18px calc(30px + var(--safe-b));
+  }
+  .modal-sheet h3{font-size:16px; margin-bottom:10px;}
+  .modal-sheet .sec{margin-bottom:18px;}
+  .modal-sheet .sec p, .modal-sheet .sec li{font-size:13px; color:var(--text-muted); line-height:1.55;}
+  .modal-sheet table{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:8px;}
+  .modal-sheet th{text-align:left; color:var(--text-muted); font-weight:600; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; padding:6px 4px; border-bottom:1px solid var(--border);}
+  .modal-sheet td{padding:7px 4px; border-bottom:1px solid var(--border); color:var(--text);}
+  .modal-close{width:100%; margin-top:6px;}
+
+  footer{
+    text-align:center; font-size:11px; color:var(--text-muted); padding:20px;
+    font-family:'IBM Plex Mono',ui-monospace,monospace; line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <span class="display">RUTINA TKD</span>
+      <span class="tag">4 días · complementaria a taekwondo</span>
+    </div>
+    <div class="header-actions">
+      <div class="session-clock" id="sessionClock">
+        <span class="mono" id="sessionTime">00:00</span>
+        <button id="sessionBtn">Iniciar</button>
+        <button id="sessionReset" class="session-reset" title="Reiniciar cronómetro de sesión" aria-label="Reiniciar cronómetro de sesión" hidden>↺</button>
+      </div>
+      <button class="icon-btn" id="infoBtn" aria-label="Info de la rutina" aria-haspopup="dialog">i</button>
+    </div>
+  </div>
+  <div class="belt" id="beltBar" aria-hidden="true"></div>
+  <div class="belt-label"><span id="beltLabelText">0 / 0 ejercicios</span><span id="beltPct">0%</span></div>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Días de entrenamiento"></div>
+</header>
+
+<main id="main" role="tabpanel" tabindex="-1"></main>
+
+<footer>
+  Hecho a medida a partir de tu rutina · funciona sin conexión<br>
+  Miniaturas y videos servidos por YouTube (youtube-nocookie) al abrirlos
+</footer>
+
+<!-- Región de anuncios para lectores de pantalla -->
+<p class="sr-only" id="srStatus" role="status" aria-live="polite"></p>
+
+<!-- Timer overlay -->
+<div class="overlay" id="timerOverlay" role="dialog" aria-modal="true" aria-labelledby="timerLabel" hidden>
+  <button class="close-x" id="timerClose" aria-label="Cerrar cronómetro">✕</button>
+  <div class="ex-label" id="timerLabel">Descanso</div>
+  <div class="ring-wrap">
+    <svg width="230" height="230" viewBox="0 0 230 230" aria-hidden="true">
+      <circle class="ring-bg" cx="115" cy="115" r="100"></circle>
+      <circle class="ring-fg" id="ringFg" cx="115" cy="115" r="100"></circle>
+    </svg>
+    <div class="ring-time mono" id="ringTime" aria-hidden="true">00:00</div>
+  </div>
+  <div class="overlay-actions">
+    <button class="ghost-btn" id="timerMinus">-15s</button>
+    <button class="ghost-btn" id="timerPause">Pausar</button>
+    <button class="ghost-btn" id="timerPlus">+15s</button>
+  </div>
+</div>
+
+<!-- Info modal -->
+<div class="modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle" hidden>
+  <div class="modal-sheet">
+    <h3 id="infoTitle">Lógica del split</h3>
+    <div class="sec">
+      <table>
+        <tr><th>Día</th><th>Foco</th><th>Motivo</th></tr>
+        <tr><td>Lun</td><td>Empuje (hipertrofia)</td><td>Día limpio, sin TKD cerca</td></tr>
+        <tr><td>Mar AM</td><td>Tracción + resistencia</td><td>TKD esa noche → sin piernas</td></tr>
+        <tr><td>Mié</td><td>Full body / resistencia</td><td>Entre dos TKD → bajo impacto</td></tr>
+        <tr><td>Vie</td><td>Piernas — potencia/velocidad</td><td>Máxima recuperación antes del próximo TKD</td></tr>
+      </table>
+    </div>
+    <div class="sec">
+      <h3>Progresión</h3>
+      <p><b style="color:var(--text)">Tren superior:</b> doble progresión — primero repeticiones al techo del rango, luego sube peso y vuelve al piso.</p>
+      <p><b style="color:var(--text)">Tren inferior:</b> progresa en calidad de ejecución (altura de salto, velocidad de patada), no en carga.</p>
+      <p><b style="color:var(--text)">Resistencia:</b> cada 2 semanas, reduce el descanso o suma una ronda.</p>
+      <p><b style="color:var(--text)">Deload:</b> cada 6–8 semanas, una semana con 40% menos volumen.</p>
+    </div>
+    <div class="sec">
+      <h3>Si el horario de TKD cambia</h3>
+      <p>1. Identifica los dos días de TKD de la semana.<br>
+      2. Ubica el día de piernas donde haya mayor separación de ambas sesiones.<br>
+      3. El día de tracción (sin piernas) va justo antes de un TKD.<br>
+      4. Los días de empuje y full body son flexibles.<br>
+      Regla de oro: el día de piernas nunca cae el mismo día ni el día anterior a TKD. Si no hay 48h de margen, reduce a la mitad la pliometría.</p>
+    </div>
+    <div class="sec">
+      <h3>Datos guardados</h3>
+      <p>Tu progreso se guarda en este dispositivo (<i>localStorage</i>) y se reinicia solo cuando cambia el día.
+      Nada sale del teléfono.</p>
+      <button class="ghost-btn" id="resetDayBtn" style="margin-top:6px;">Reiniciar progreso de hoy</button>
+    </div>
+    <button class="ghost-btn modal-close" id="infoClose">Cerrar</button>
+  </div>
+</div>
+
+<!-- Video modal -->
+<div class="video-modal" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="videoLabel" hidden>
+  <button class="close-x" id="videoClose" aria-label="Cerrar video">✕</button>
+  <div class="ex-label" id="videoLabel">Técnica</div>
+  <div class="video-frame-wrap" id="videoFrameWrap"></div>
+  <div class="video-modal-actions">
+    <a class="yt-link" id="videoYtLink" href="#" target="_blank" rel="noopener">Abrir en YouTube ↗</a>
+  </div>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const DAYS = [
+  { id:1, short:'D1', label:'Empuje', title:'Día 1 · Lunes', focus:'Tren superior — Empuje (hipertrofia) + core',
+    warmup:{title:'Warm-up', duration:'8 min', detail:'Cardio suave 5 min + movilidad de hombro (rotaciones, band pull-apart) 3 min'},
+    exercises:[
+      {id:'d1e1', name:'Press banca plano (barra o máquina)', sets:'4×8–10', rest:90, note:'Sube peso cuando completes 4×10 con buena técnica', yt:'Pp8rHcFVIYg'},
+      {id:'d1e2', name:'Press inclinado con mancuernas', sets:'3×10–12', rest:75, note:'', yt:'QEY2z5LtB9Y'},
+      {id:'d1e3', name:'Press militar (máquina o mancuerna)', sets:'3×10–12', rest:75, note:'', yt:'BZInAZaEM3s'},
+      {id:'d1e4', name:'Elevaciones laterales', sets:'3×12–15', rest:60, note:'Tempo controlado, sin impulso', yt:'6a-sO62TN5E'},
+      {id:'d1e5', name:'Fondos en máquina', sets:'3×10–12', rest:60, note:'', yt:'pMarNxAvHPc'},
+      {id:'d1e6', name:'Extensión de tríceps en polea', sets:'3×12–15', rest:45, note:'', yt:'_w-HpW70nSQ'},
+      {id:'d1e7', name:'Plancha frontal', sets:'3×40–60s', rest:30, note:'', yt:'A2b2EmIg0dA'},
+      {id:'d1e8', name:'Elevación de piernas colgado', sets:'3×10–12', rest:45, note:'Activa flexores de cadera (útil para patada)', yt:'Pr1ieGZ5atk'},
+    ]
+  },
+  { id:2, short:'D2', label:'Tracción', title:'Día 2 · Martes AM', focus:'Tren superior — Tracción + resistencia', sub:'TKD esa noche — sin piernas',
+    exercises:[
+      {id:'d2e1', name:'Jalón al pecho o dominadas asistidas', sets:'4×8–10', rest:90, note:'', yt:'CAwf7n6Luuc'},
+      {id:'d2e2', name:'Remo en máquina (agarre neutro)', sets:'4×10–12', rest:75, note:'', yt:'OeLb503NZHk'},
+      {id:'d2e3', name:'Remo horizontal en polea baja', sets:'3×12', rest:60, note:'', yt:'YKAeU55CkVk'},
+      {id:'d2e4', name:'Face pull', sets:'3×15', rest:45, note:'Clave para salud de hombro tras el empuje del lunes', yt:'0Po47vvj9g4'},
+      {id:'d2e5', name:'Curl bíceps con mancuerna', sets:'3×10–12', rest:60, note:'', yt:'6DeLZ6cbgWQ'},
+      {id:'d2e6', name:'Curl martillo', sets:'3×12', rest:45, note:'', yt:'8XLxfXROrTo'},
+    ],
+    circuit:{title:'Circuito de resistencia', roundsLabel:'3–4 rondas', totalMin:10, restBetween:60,
+      items:[
+        {name:'Remo ergómetro', detail:'250m', yt:'UEN2JKg9u40'},
+        {name:'Burpees', detail:'10 reps', yt:'qLBImHhCXSw'},
+        {name:'Battle rope', detail:'30s', yt:'nzlmTiKqno0'},
+      ]}
+  },
+  { id:3, short:'D3', label:'Full Body', title:'Día 3 · Miércoles', focus:'Full body — Acondicionamiento / resistencia', sub:'Entre dos TKD — bajo impacto en piernas',
+    amrap:{title:'Circuito AMRAP', minutes:20, roundsLabel:'4–5 rondas', restBetween:'60–90s',
+      items:[
+        {name:'Bici Airdyne / elíptica', detail:'1 min fuerte', yt:'PHReR7tC_tw'},
+        {name:'Med ball slams', detail:'12 reps', yt:'EsAhU1jHpiQ'},
+        {name:'Farmer’s carry', detail:'40m', yt:'lLAw6fUccKA'},
+        {name:'Mountain climbers', detail:'30s', yt:'cnyTQDSE884'},
+        {name:'Remo ergómetro', detail:'250m', yt:'UEN2JKg9u40'},
+      ]},
+    exercises:[
+      {id:'d3e1', name:'Russian twist con peso', sets:'3×15 por lado', rest:30, note:'', yt:'IJDOoVyVjhc'},
+      {id:'d3e2', name:'Plancha lateral', sets:'3×30s por lado', rest:30, note:'', yt:'XeN4pEZZJNI'},
+    ]
+  },
+  { id:4, short:'D4', label:'Piernas', title:'Día 4 · Viernes', focus:'Tren inferior — Potencia/velocidad + core rotacional', sub:'Kick-specific',
+    warmup:{title:'Warm-up dinámico', duration:'10 min', detail:'Leg swings, hip circles, activación de glúteo con banda, saltos suaves'},
+    exercises:[
+      {id:'d4e1', name:'Sentadilla búlgara con mancuernas', sets:'3×8 por lado', rest:90, note:'Carga moderada, énfasis en explosión concéntrica', yt:'hiLF_pF3EJM'},
+      {id:'d4e2', name:'Peso muerto rumano con mancuernas', sets:'3×10', rest:90, note:'Hip hinge = patrón de "chamber" de patada', yt:'aa57T45iFSE'},
+      {id:'d4e3', name:'Hip thrust (máquina o barra)', sets:'3×10–12', rest:90, note:'Potencia de glúteo, motor principal de la patada', yt:'S_uZP4UH6J0'},
+      {id:'d4e4', name:'Zancada lateral con mancuernas', sets:'3×10 por lado', rest:75, note:'Mimetiza mecánica de dolyo chagi (patada circular)', yt:'R8jArZG2J6Q'},
+      {id:'d4e5', name:'Box jump', sets:'4×5', rest:120, note:'100% calidad/potencia — parar si baja la altura del salto', yt:'G-bxQY57mKc'},
+      {id:'d4e6', name:'Patada con banda de resistencia o polea baja', sets:'3×10 por lado', rest:60, note:'Front kick / roundhouse, prioriza velocidad sobre carga', yt:'vMG6bQBAex4'},
+      {id:'d4e7', name:'Elevación de talones (pantorrilla)', sets:'3×15–20', rest:45, note:'Para definición — no llevar al fallo', yt:'4HQ8Am9IuME'},
+      {id:'d4e8', name:'Cable woodchopper', sets:'3×12 por lado', rest:45, note:'Potencia rotacional de cadera = más fuerza en el giro de la patada', yt:'he4IhLc1d5k'},
+    ]
+  },
+];
+
+/* Qué día mostrar según el día de la semana (0=domingo) */
+const WEEKDAY_TO_DAY = {0:1, 1:1, 2:2, 3:3, 4:4, 5:4, 6:1};
+
+/* ============ HELPERS ============ */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function fmt(sec){
+  sec = Math.max(0, Math.round(sec));
+  const m = Math.floor(sec/60).toString().padStart(2,'0');
+  const s = Math.floor(sec%60).toString().padStart(2,'0');
+  return `${m}:${s}`;
+}
+function todayKey(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function dayById(id){ return DAYS.find(d=>d.id===id) || DAYS[0]; }
+function blockId(day){ return day.circuit ? `d${day.id}-circuit` : (day.amrap ? `d${day.id}-amrap` : null); }
+/* Ids completables del día: ejercicios + el bloque de circuito/AMRAP si existe */
+function allExIds(day){
+  const ids = (day.exercises||[]).map(e=>e.id);
+  const b = blockId(day);
+  if(b) ids.push(b);
+  return ids;
+}
+function announce(msg){ document.getElementById('srStatus').textContent = msg; }
+
+/* ============ STATE + PERSISTENCIA ============ */
+const STORE_KEY = 'rutina-tkd:v1';
+
+const state = {
+  currentDay: 1,
+  completed: {1:new Set(),2:new Set(),3:new Set(),4:new Set()},
+  session: {phase:'idle', accumulated:0, startedAt:null},
+  rounds: {1:0,2:0,3:0,4:0},
+  timer: {intervalId:null, endAt:0, remaining:0, total:0, running:false, finished:false,
+          beepFired:false, scheduled:[], label:''},
+};
+
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      date: todayKey(),
+      currentDay: state.currentDay,
+      completed: Object.fromEntries(Object.entries(state.completed).map(([k,v])=>[k,[...v]])),
+      rounds: state.rounds,
+      session: state.session,
+    }));
+  }catch(e){ /* modo privado / sin cuota: la app sigue funcionando en memoria */ }
+}
+
+function loadState(){
+  let raw = null;
+  try{ raw = localStorage.getItem(STORE_KEY); }catch(e){}
+  const suggestedDay = WEEKDAY_TO_DAY[new Date().getDay()] || 1;
+
+  if(!raw){ state.currentDay = suggestedDay; return; }
+  let data;
+  try{ data = JSON.parse(raw); }catch(e){ state.currentDay = suggestedDay; return; }
+
+  // Día distinto → arrancamos limpio y saltamos al día de hoy
+  if(data.date !== todayKey()){
+    state.currentDay = suggestedDay;
+    saveState();
+    return;
+  }
+  state.currentDay = DAYS.some(d=>d.id===data.currentDay) ? data.currentDay : suggestedDay;
+  for(const k of [1,2,3,4]){
+    state.completed[k] = new Set((data.completed && data.completed[k]) || []);
+    state.rounds[k] = (data.rounds && data.rounds[k]) || 0;
+  }
+  if(data.session && typeof data.session.accumulated === 'number'){
+    state.session = data.session;
+    // si quedó corriendo, sigue contando desde el timestamp guardado
+    if(state.session.phase === 'running' && !state.session.startedAt) state.session.phase = 'paused';
+  }
+}
+
+function resetToday(){
+  for(const k of [1,2,3,4]){ state.completed[k].clear(); state.rounds[k] = 0; }
+  state.session = {phase:'idle', accumulated:0, startedAt:null};
+  stopSessionTicker();
+  saveState();
+  renderAll();
+  renderSessionClock();
+  announce('Progreso del día reiniciado');
+}
+
+/* ============ MINIATURA DE VIDEO ============ */
+function videoThumb(yt, title){
+  return `<button type="button" class="vid-thumb" data-yt="${esc(yt)}" data-title="${esc(title)}"
+      aria-label="Ver técnica: ${esc(title)}">
+      <img src="https://i.ytimg.com/vi/${esc(yt)}/mqdefault.jpg" alt="" loading="lazy" decoding="async" width="320" height="180">
+      <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+    </button>`;
+}
+
+/* ============ RENDER TABS ============ */
+function renderTabs(){
+  const el = document.getElementById('tabs');
+  el.innerHTML = DAYS.map(d=>`
+    <button type="button" role="tab" id="tab-${d.id}" class="tab"
+      aria-selected="${d.id===state.currentDay}" tabindex="${d.id===state.currentDay?0:-1}"
+      aria-controls="main" data-day="${d.id}">
+      <b>${esc(d.short)}</b>${esc(d.label)}
+    </button>`).join('');
+
+  el.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click', ()=> selectDay(parseInt(t.dataset.day,10)));
+    t.addEventListener('keydown', e=>{
+      const order = DAYS.map(d=>d.id);
+      const i = order.indexOf(parseInt(t.dataset.day,10));
+      let next = null;
+      if(e.key === 'ArrowRight') next = order[(i+1) % order.length];
+      else if(e.key === 'ArrowLeft') next = order[(i-1+order.length) % order.length];
+      else if(e.key === 'Home') next = order[0];
+      else if(e.key === 'End') next = order[order.length-1];
+      if(next !== null){
+        e.preventDefault();
+        selectDay(next);
+        document.getElementById('tab-'+next).focus();
+      }
+    });
+  });
+  document.getElementById('main').setAttribute('aria-labelledby', 'tab-'+state.currentDay);
+}
+
+function selectDay(id){
+  if(state.currentDay === id) return;
+  state.currentDay = id;
+  saveState();
+  renderAll();
+}
+
+/* ============ RENDER TARJETA DE EJERCICIO ============ */
+function exCard(ex){
+  const isDone = state.completed[state.currentDay].has(ex.id);
+  return `
+  <div class="card ${isDone?'done':''}" data-id="${esc(ex.id)}">
+    ${videoThumb(ex.yt, ex.name)}
+    <div class="card-body">
+      <div class="card-top">
+        <div class="ex-name">${esc(ex.name)}</div>
+        <button type="button" class="chk" data-check="${esc(ex.id)}" aria-pressed="${isDone}"
+          aria-label="Marcar «${esc(ex.name)}» como completado">✓</button>
+      </div>
+      <div class="meta-row">
+        <span class="chip">${esc(ex.sets)}</span>
+        <button type="button" class="rest-btn" data-rest="${esc(ex.id)}" data-sec="${ex.rest}">⏱ Descanso ${ex.rest}s</button>
+      </div>
+      ${ex.note ? `<div class="note">${esc(ex.note)}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function circuitItemRow(it){
+  return `<div class="circuit-item">${videoThumb(it.yt, it.name)}<span>${esc(it.name)}</span><span class="detail">${esc(it.detail)}</span></div>`;
+}
+
+function blockCard(day, block, kind){
+  const id = blockId(day);
+  const isDone = state.completed[day.id].has(id);
+  const meta = kind === 'circuit'
+    ? `${block.totalMin} min · ${block.roundsLabel}`
+    : `${block.minutes} min · ${block.roundsLabel}`;
+  const totalMin = kind === 'circuit' ? block.totalMin : block.minutes;
+  const startLabel = kind === 'circuit' ? `Iniciar circuito ${totalMin}:00` : `Iniciar AMRAP ${totalMin}:00`;
+  const restBtn = (kind === 'circuit' && typeof block.restBetween === 'number')
+    ? `<button type="button" class="rest-btn" id="circuitRestBtn" data-sec="${block.restBetween}"
+         style="margin-top:10px; width:100%; text-align:center; padding:9px;">⏱ Descanso entre rondas (${block.restBetween}s)</button>`
+    : '';
+
+  return `<div class="block-title">${kind === 'circuit' ? 'Circuito' : 'AMRAP'}</div>
+  <div class="circuit-card ${isDone?'done':''}" data-id="${esc(id)}">
+    <div class="circuit-head">
+      <h3>${esc(block.title)}</h3>
+      <div class="circuit-head-right">
+        <span class="circuit-meta">${esc(meta)}</span>
+        <button type="button" class="chk" data-check="${esc(id)}" aria-pressed="${isDone}"
+          aria-label="Marcar «${esc(block.title)}» como completado">✓</button>
+      </div>
+    </div>
+    <div class="circuit-list">${block.items.map(circuitItemRow).join('')}</div>
+    <button type="button" class="primary-btn" id="startCircuit" data-sec="${totalMin*60}" data-label="${esc(block.title)}">${esc(startLabel)}</button>
+    <div class="round-row">
+      <button type="button" class="round-btn" id="roundMinus" aria-label="Quitar una ronda">−</button>
+      <span class="n mono" id="roundCount" role="status">0 rondas</span>
+      <button type="button" class="round-btn" id="roundPlus" aria-label="Sumar una ronda">+</button>
+    </div>
+    ${restBtn}
+  </div>`;
+}
+
+/* ============ RENDER DÍA ============ */
+function renderDay(){
+  const day = dayById(state.currentDay);
+  const main = document.getElementById('main');
+  let html = `<div class="day-head">
+    <h2>${esc(day.title)}</h2>
+    <div class="focus">${esc(day.focus)}</div>
+    ${day.sub ? `<div class="sub">${esc(day.sub)}</div>` : ''}
+  </div>`;
+
+  if(day.warmup){
+    html += `<div class="warmup-card"><b>${esc(day.warmup.title)}</b> · ${esc(day.warmup.duration)}<br>${esc(day.warmup.detail)}</div>`;
+  }
+  if(day.amrap){
+    html += blockCard(day, day.amrap, 'amrap');
+  }
+  if(day.exercises && day.exercises.length){
+    html += `<div class="block-title">Ejercicios</div>`;
+    html += day.exercises.map(exCard).join('');
+  }
+  if(day.circuit){
+    html += blockCard(day, day.circuit, 'circuit');
+  }
+
+  main.innerHTML = html;
+  wireDayEvents(day);
+}
+
+function wireDayEvents(day){
+  document.querySelectorAll('[data-check]').forEach(chk=>{
+    chk.addEventListener('click', ()=> toggleDone(chk.dataset.check));
+  });
+  document.querySelectorAll('[data-rest]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const sec = parseInt(btn.dataset.sec, 10);
+      const name = btn.closest('.card').querySelector('.ex-name').textContent;
+      openTimer(sec, 'Descanso · ' + name, btn);
+    });
+  });
+  document.querySelectorAll('[data-yt]').forEach(thumb=>{
+    thumb.addEventListener('click', ()=> openVideo(thumb.dataset.yt, thumb.dataset.title, thumb));
+  });
+
+  const startCircuit = document.getElementById('startCircuit');
+  if(startCircuit){
+    startCircuit.addEventListener('click', ()=>{
+      openTimer(parseInt(startCircuit.dataset.sec,10), startCircuit.dataset.label, startCircuit);
+    });
+  }
+  const circuitRestBtn = document.getElementById('circuitRestBtn');
+  if(circuitRestBtn){
+    circuitRestBtn.addEventListener('click', ()=>{
+      openTimer(parseInt(circuitRestBtn.dataset.sec,10), 'Descanso entre rondas', circuitRestBtn);
+    });
+  }
+
+  const roundCount = document.getElementById('roundCount');
+  if(roundCount){
+    const dayId = day.id;
+    const paint = ()=>{ roundCount.textContent = state.rounds[dayId] + ' rondas'; };
+    paint();
+    document.getElementById('roundPlus').addEventListener('click', ()=>{
+      state.rounds[dayId]++; paint(); saveState();
+    });
+    document.getElementById('roundMinus').addEventListener('click', ()=>{
+      state.rounds[dayId] = Math.max(0, state.rounds[dayId]-1); paint(); saveState();
+    });
+  }
+}
+
+/* Marca/desmarca sin re-renderizar el día entero (evita el parpadeo) */
+function toggleDone(id){
+  const set = state.completed[state.currentDay];
+  const nowDone = !set.has(id);
+  nowDone ? set.add(id) : set.delete(id);
+
+  const card = document.querySelector(`[data-id="${CSS.escape(id)}"]`);
+  if(card) card.classList.toggle('done', nowDone);
+  const btn = document.querySelector(`[data-check="${CSS.escape(id)}"]`);
+  if(btn) btn.setAttribute('aria-pressed', String(nowDone));
+
+  updateBelt();
+  saveState();
+}
+
+/* ============ BARRA DE CINTURÓN ============ */
+function updateBelt(){
+  const day = dayById(state.currentDay);
+  const ids = allExIds(day);
+  const total = ids.length;
+  const done = ids.filter(id=>state.completed[state.currentDay].has(id)).length;
+  const bar = document.getElementById('beltBar');
+  const segCount = Math.max(total, 1);
+  bar.innerHTML = Array.from({length:segCount}).map((_,i)=>`<div class="belt-seg ${i<done?'on':''}"></div>`).join('');
+  document.getElementById('beltLabelText').textContent = `${done} / ${total} bloques`;
+  document.getElementById('beltPct').textContent = total ? Math.round(done/total*100)+'%' : '0%';
+}
+
+/* ============ CRONÓMETRO DE SESIÓN (basado en timestamps) ============ */
+let sessionTickerId = null;
+
+function sessionElapsed(){
+  const s = state.session;
+  const live = (s.phase === 'running' && s.startedAt) ? (Date.now() - s.startedAt)/1000 : 0;
+  return s.accumulated + live;
+}
+function renderSessionClock(){
+  const s = state.session;
+  document.getElementById('sessionTime').textContent = fmt(sessionElapsed());
+  const btn = document.getElementById('sessionBtn');
+  const clock = document.getElementById('sessionClock');
+  const reset = document.getElementById('sessionReset');
+  clock.classList.toggle('running', s.phase === 'running');
+  btn.textContent = s.phase === 'running' ? 'Pausar' : (s.accumulated > 0 ? 'Seguir' : 'Iniciar');
+  reset.hidden = !(s.phase !== 'running' && sessionElapsed() > 0);
+}
+function startSessionTicker(){
+  stopSessionTicker();
+  sessionTickerId = setInterval(()=>{
+    document.getElementById('sessionTime').textContent = fmt(sessionElapsed());
+  }, 500);
+}
+function stopSessionTicker(){
+  if(sessionTickerId){ clearInterval(sessionTickerId); sessionTickerId = null; }
+}
+function toggleSession(){
+  const s = state.session;
+  if(s.phase === 'running'){
+    s.accumulated = sessionElapsed();
+    s.startedAt = null;
+    s.phase = 'paused';
+    stopSessionTicker();
+  } else {
+    s.startedAt = Date.now();
+    s.phase = 'running';
+    startSessionTicker();
+  }
+  renderSessionClock();
+  saveState();
+}
+function resetSession(){
+  state.session = {phase:'idle', accumulated:0, startedAt:null};
+  stopSessionTicker();
+  renderSessionClock();
+  saveState();
+}
+
+/* ============ AUDIO (beeps programados, sobreviven al throttling) ============ */
+let audioCtx = null;
+function ensureAudio(){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+  }catch(e){ audioCtx = null; }
+  return audioCtx;
+}
+/* Programa un tono a `delay` segundos en el futuro. El scheduler de WebAudio
+   sigue corriendo aunque el JS esté throttleado en segundo plano. */
+function scheduleTone(delay, freq, dur, vol){
+  const ctx = ensureAudio();
+  if(!ctx) return null;
+  const t0 = ctx.currentTime + Math.max(0, delay);
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type = 'sine';
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(vol, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t0); o.stop(t0 + dur + 0.05);
+  return o;
+}
+function vibrate(pattern){
+  if(navigator.vibrate){ try{ navigator.vibrate(pattern); }catch(e){} }
+}
+
+/* ============ WAKE LOCK (que no se apague la pantalla) ============ */
+let wakeLock = null;
+async function acquireWakeLock(){
+  try{
+    if('wakeLock' in navigator && !wakeLock){
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', ()=>{ wakeLock = null; });
+    }
+  }catch(e){ /* no soportado o denegado */ }
+}
+function releaseWakeLock(){
+  try{ if(wakeLock) wakeLock.release(); }catch(e){}
+  wakeLock = null;
+}
+
+/* ============ CRONÓMETRO DE DESCANSO / CIRCUITO ============ */
+const RING_R = 100;
+const RING_CIRC = 2 * Math.PI * RING_R;
+
+function clearScheduled(){
+  const t = state.timer;
+  t.scheduled.forEach(n=>{ try{ n.onended = null; n.stop(); n.disconnect(); }catch(e){} });
+  t.scheduled = [];
+}
+function scheduleBeeps(secondsLeft){
+  const t = state.timer;
+  clearScheduled();
+  if(!ensureAudio()) return;
+  // cuenta regresiva 3-2-1
+  [3,2,1].forEach(n=>{
+    if(secondsLeft > n){
+      const node = scheduleTone(secondsLeft - n, 660, 0.10, 0.18);
+      if(node) t.scheduled.push(node);
+    }
+  });
+  // beep final: si suena, marcamos beepFired para no duplicarlo al volver a la app
+  const fin = scheduleTone(secondsLeft, 880, 0.5, 0.35);
+  if(fin){
+    fin.onended = ()=>{ t.beepFired = true; };
+    t.scheduled.push(fin);
+  }
+}
+
+function openTimer(seconds, label, trigger){
+  const t = state.timer;
+  clearInterval(t.intervalId);
+  clearScheduled();
+  t.total = seconds;
+  t.remaining = seconds;
+  t.endAt = Date.now() + seconds*1000;
+  t.running = true;
+  t.finished = false;
+  t.beepFired = false;
+  t.label = label;
+
+  document.getElementById('timerLabel').textContent = label;
+  document.getElementById('timerPause').textContent = 'Pausar';
+  const ringFg = document.getElementById('ringFg');
+  ringFg.style.strokeDasharray = RING_CIRC;
+  ringFg.classList.remove('done','warn');
+
+  openDialog(document.getElementById('timerOverlay'), document.getElementById('timerPause'), trigger);
+  ensureAudio();          // desbloqueo de audio dentro del gesto del usuario
+  scheduleBeeps(seconds);
+  acquireWakeLock();
+  startTicking();
+}
+
+function startTicking(){
+  const t = state.timer;
+  clearInterval(t.intervalId);
+  renderTimer();
+  t.intervalId = setInterval(renderTimer, 200);
+}
+
+function currentLeft(){
+  const t = state.timer;
+  return t.running ? (t.endAt - Date.now())/1000 : t.remaining;
+}
+
+function renderTimer(){
+  const t = state.timer;
+  const left = currentLeft();
+  const ringFg = document.getElementById('ringFg');
+  const ringTime = document.getElementById('ringTime');
+
+  if(t.finished){
+    ringTime.textContent = '¡Listo!';
+    ringFg.style.strokeDashoffset = 0;
+    return;
+  }
+  if(t.running && left <= 0){ finishTimer(); return; }
+
+  const shown = Math.max(0, Math.ceil(left - 0.001));
+  const frac = Math.max(0, Math.min(1, left / Math.max(1, t.total)));
+  ringFg.style.strokeDashoffset = RING_CIRC * (1 - frac);
+  ringFg.classList.toggle('warn', shown <= 5 && shown > 0);
+  ringTime.textContent = fmt(shown);
+}
+
+function finishTimer(silent){
+  const t = state.timer;
+  clearInterval(t.intervalId);
+  t.intervalId = null;
+  t.running = false;
+  t.finished = true;
+  t.remaining = 0;
+  const ringFg = document.getElementById('ringFg');
+  ringFg.classList.add('done');
+  ringFg.classList.remove('warn');
+  ringFg.style.strokeDashoffset = 0;
+  document.getElementById('ringTime').textContent = '¡Listo!';
+  document.getElementById('timerPause').textContent = 'Reiniciar';
+  if(!silent){
+    // si el beep programado no llegó a sonar (audio suspendido en background), suena ahora
+    if(!t.beepFired) scheduleTone(0, 880, 0.5, 0.35);
+    vibrate([200,80,200]);
+    announce('Tiempo terminado: ' + t.label);
+  }
+  clearScheduled();
+  releaseWakeLock();
+}
+
+function pauseTimer(){
+  const t = state.timer;
+  t.remaining = Math.max(0, currentLeft());
+  t.running = false;
+  clearInterval(t.intervalId);
+  t.intervalId = null;
+  clearScheduled();
+  releaseWakeLock();
+  document.getElementById('timerPause').textContent = 'Reanudar';
+  renderTimer();
+}
+function resumeTimer(seconds){
+  const t = state.timer;
+  const left = seconds !== undefined ? seconds : t.remaining;
+  if(left <= 0) return;
+  t.remaining = left;
+  t.endAt = Date.now() + left*1000;
+  t.running = true;
+  t.finished = false;
+  t.beepFired = false;
+  document.getElementById('ringFg').classList.remove('done');
+  document.getElementById('timerPause').textContent = 'Pausar';
+  ensureAudio();
+  scheduleBeeps(left);
+  acquireWakeLock();
+  startTicking();
+}
+
+/* +15 / -15 manteniendo coherentes `remaining` y `total` (y reanudando si ya terminó) */
+function adjustTimer(delta){
+  const t = state.timer;
+  const wasFinished = t.finished;
+  let left = wasFinished ? 0 : Math.max(0, currentLeft());
+  left = Math.max(0, left + delta);
+  // si ya había terminado, el nuevo total es solo lo que acabamos de sumar
+  // (así el anillo arranca lleno y no en un 14% engañoso)
+  t.total = wasFinished ? Math.max(1, left) : Math.max(1, t.total + delta, left);
+
+  if(left <= 0){
+    t.remaining = 0;
+    if(!wasFinished) finishTimer(true);
+    return;
+  }
+  if(t.running || wasFinished){
+    t.finished = false;
+    resumeTimer(left);
+  } else {
+    t.remaining = left;
+    renderTimer();
+  }
+}
+
+function closeTimer(){
+  const t = state.timer;
+  clearInterval(t.intervalId);
+  t.intervalId = null;
+  t.running = false;
+  clearScheduled();
+  releaseWakeLock();
+  closeDialog(document.getElementById('timerOverlay'));
+}
+
+/* Al volver del segundo plano: recalcular por timestamp y re-pedir el wake lock */
+document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState !== 'visible') return;
+  if(state.session.phase === 'running'){
+    document.getElementById('sessionTime').textContent = fmt(sessionElapsed());
+  }
+  const overlayOpen = !document.getElementById('timerOverlay').hidden;
+  if(overlayOpen){
+    if(state.timer.running){ acquireWakeLock(); renderTimer(); }
+  }
+});
+
+/* ============ DIÁLOGOS (Escape, fondo, foco) ============ */
+const dialogStack = [];
+const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/* `trigger` explícito: en Safari un <button> no recibe foco al tocarlo,
+   así que document.activeElement no sirve para devolver el foco al cerrar. */
+function openDialog(el, focusEl, trigger){
+  el._returnFocus = trigger || document.activeElement;
+  el.hidden = false;
+  if(!dialogStack.includes(el)) dialogStack.push(el);
+  const target = focusEl || el.querySelector(FOCUSABLE);
+  if(target) target.focus();
+}
+function closeDialog(el){
+  el.hidden = true;
+  const i = dialogStack.indexOf(el);
+  if(i >= 0) dialogStack.splice(i, 1);
+  const back = el._returnFocus;
+  if(back && document.contains(back) && back.focus) back.focus();
+  el._returnFocus = null;
+}
+function closeTopDialog(){
+  const el = dialogStack[dialogStack.length - 1];
+  if(!el) return;
+  if(el.id === 'timerOverlay') closeTimer();
+  else if(el.id === 'videoModal') closeVideo();
+  else closeDialog(el);
+}
+document.addEventListener('keydown', e=>{
+  if(!dialogStack.length) return;
+  if(e.key === 'Escape'){ e.preventDefault(); closeTopDialog(); return; }
+  if(e.key === 'Tab'){
+    const el = dialogStack[dialogStack.length - 1];
+    const items = [...el.querySelectorAll(FOCUSABLE)].filter(n=>n.offsetParent !== null);
+    if(!items.length) return;
+    const first = items[0], last = items[items.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+});
+/* Toque en el fondo cierra info y video. En el cronómetro NO: un toque
+   accidental no debe cancelar un descanso en curso (solo ✕ o Escape). */
+['infoModal','videoModal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click', e=>{
+    if(e.target.id === id) closeTopDialog();
+  });
+});
+
+/* ============ MODAL DE VIDEO ============ */
+function openVideo(yt, title, trigger){
+  document.getElementById('videoLabel').textContent = title;
+  document.getElementById('videoYtLink').href = 'https://www.youtube.com/watch?v=' + encodeURIComponent(yt);
+  // autoplay silenciado: arranca solo pero no suena en medio del gimnasio
+  document.getElementById('videoFrameWrap').innerHTML =
+    `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(yt)}?rel=0&modestbranding=1&playsinline=1&autoplay=1&mute=1"
+      title="${esc(title)}"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen></iframe>`;
+  openDialog(document.getElementById('videoModal'), document.getElementById('videoClose'), trigger);
+}
+function closeVideo(){
+  document.getElementById('videoFrameWrap').innerHTML = '';
+  closeDialog(document.getElementById('videoModal'));
+}
+
+/* ============ INIT ============ */
+function renderAll(){
+  renderTabs();
+  renderDay();
+  updateBelt();
+}
+
+document.getElementById('sessionBtn').addEventListener('click', toggleSession);
+document.getElementById('sessionReset').addEventListener('click', resetSession);
+document.getElementById('infoBtn').addEventListener('click', e=>{
+  openDialog(document.getElementById('infoModal'), document.getElementById('infoClose'), e.currentTarget);
+});
+document.getElementById('infoClose').addEventListener('click', ()=> closeDialog(document.getElementById('infoModal')));
+document.getElementById('resetDayBtn').addEventListener('click', ()=>{
+  if(confirm('¿Borrar los checks, las rondas y el cronómetro de hoy?')) resetToday();
+});
+document.getElementById('timerClose').addEventListener('click', closeTimer);
+document.getElementById('videoClose').addEventListener('click', closeVideo);
+document.getElementById('timerPause').addEventListener('click', ()=>{
+  const t = state.timer;
+  if(t.finished) resumeTimer(t.total);       // "Reiniciar" cuando ya terminó
+  else if(t.running) pauseTimer();
+  else resumeTimer();
+});
+document.getElementById('timerPlus').addEventListener('click', ()=> adjustTimer(15));
+document.getElementById('timerMinus').addEventListener('click', ()=> adjustTimer(-15));
+
+loadState();
+renderAll();
+renderSessionClock();
+if(state.session.phase === 'running') startSessionTicker();
+
+/* ============ SERVICE WORKER (offline) ============ */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{ /* sin offline, la app sigue igual */ });
+  });
+}
+</script>
+</body>
+</html>
