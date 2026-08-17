@@ -39,7 +39,8 @@ jobs:
           echo "OK: todos los assets precacheados existen."
 
       - name: Validar manifest.json
-        run: python3 -c "import json;json.load(open('manifest.json'));print('OK: manifest.json es JSON válido')"
+        run: |
+          python3 -c "import json;json.load(open('manifest.json'));print('OK: manifest.json es JSON valido')"
 
   deploy:
     needs: validate
