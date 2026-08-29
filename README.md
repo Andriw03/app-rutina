@@ -2,7 +2,7 @@
 
 App web de una sola página (sin frameworks, sin build) para seguir tu rutina de gimnasio
 complementaria a taekwondo: 4 días, videos de técnica por ejercicio y cronómetros
-integrados (descanso por ejercicio, circuito de resistencia y AMRAP).
+integrados (descanso por ejercicio y bloque de cardio final).
 
 Es una PWA instalable que **funciona sin conexión** y **guarda tu progreso del día**.
 
@@ -42,6 +42,7 @@ python3 -m http.server 8000
 | Archivo | Qué es |
 |---|---|
 | `index.html` | Toda la app: datos de la rutina, estilos y lógica |
+| `Rutina_Gimnasio_TKD.md` | La rutina en texto — fuente de la que salen los datos de `index.html` |
 | `manifest.json` | Metadatos de PWA (nombre, íconos, colores, scope) |
 | `sw.js` | Service worker: precache de la app + cache de miniaturas |
 | `fonts/` | Oswald, Inter e IBM Plex Mono auto-hospedadas (subset latin, ~100 KB) |
@@ -50,18 +51,22 @@ python3 -m http.server 8000
 
 ## Qué incluye
 
-- **4 días** cargados 1:1 desde tu rutina (Lunes empuje, Martes AM tracción, Miércoles full
-  body/AMRAP, Viernes piernas/potencia), con warm-ups, notas técnicas y la lógica del split
-  en el botón "i" (incluye la regla de reprogramación si el TKD cambia de día).
+- **4 días** cargados 1:1 desde [`Rutina_Gimnasio_TKD.md`](Rutina_Gimnasio_TKD.md) (Lunes
+  empuje, Martes AM tracción, Miércoles full body, Viernes piernas/potencia). Cada día sigue la
+  misma estructura de la rutina: **Fuerza → Abdominales → Cardio final**, con warm-ups, notas
+  técnicas y la lógica del split en el botón "i" (incluye la regla de reprogramación si el TKD
+  cambia de día).
 - **Video real por ejercicio**: miniatura de YouTube que abre un reproductor embebido
   (youtube-nocookie, autoplay silenciado para no sonar en medio del gimnasio). Cada video
   tiene además un link "Abrir en YouTube" como respaldo.
 - **Cronómetro de descanso** por ejercicio, con anillo de progreso, cuenta regresiva sonora
   de 3-2-1, beep final y vibración (la vibración no funciona en iOS Safari).
-- **Cronómetro de circuito/AMRAP** con contador manual de rondas.
+- **Bloque de cardio final** por día, con cronómetro del bloque completo y, donde el cardio va
+  por máquinas (martes y miércoles), un cronómetro por tramo. El martes suma contador manual de
+  rondas.
 - **Cronómetro de sesión** para medir la duración total del entreno.
 - **Barra de progreso tipo cinturón** (blanco→amarillo→verde→azul→rojo→negro) que cuenta
-  los ejercicios *y* el bloque de circuito/AMRAP del día.
+  los ejercicios *y* el bloque de cardio final del día.
 
 ## Cómo se comporta en el gimnasio
 
@@ -107,7 +112,12 @@ embebido de YouTube, y este último solo se carga cuando abres un video.
 - Si agregas archivos al precache, agrégalos a `CORE_ASSETS`. El workflow falla si alguna
   ruta de esa lista no existe: `addAll()` falla entera con un solo 404 y dejaría roto el
   offline.
-- Si cambia el esquema de datos guardados, sube `STORE_KEY` en `index.html` (`rutina-tkd:v1`).
+- Si cambia el esquema de datos guardados —o cambian los ids de ejercicio al editar la rutina—,
+  sube `STORE_KEY` en `index.html` (`rutina-tkd:v2`), o los checks viejos quedan pegados a
+  ejercicios que ya no son los mismos.
+- La rutina vive en el array `DAYS` de `index.html`: cada día tiene `blocks` (cada bloque con su
+  título y sus ejercicios) y un `cardio` final. Los ids (`d1e1`, `d1c`…) son la clave del progreso
+  guardado.
 
 ## Ideas para más adelante (no incluidas)
 

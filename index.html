@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rutina TKD · Panel de entrenamiento</title>
-<meta name="description" content="Panel de entrenamiento de 4 días complementario a taekwondo: cronómetros de descanso, circuito y AMRAP, videos de técnica y progreso por sesión.">
+<meta name="description" content="Panel de entrenamiento de 4 días complementario a taekwondo: cronómetros de descanso y de cardio final, videos de técnica y progreso por sesión.">
 <meta name="theme-color" content="#0B0D10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -231,6 +231,14 @@
   .circuit-item .vid-thumb{width:44px; height:44px; border-radius:9px;}
   .circuit-item .vid-thumb .play svg{width:16px; height:16px;}
   .circuit-item .detail{color:var(--text-muted); font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; margin-left:auto;}
+  .cardio-item{gap:8px;}
+  .cardio-item .ci-name{min-width:0; overflow-wrap:anywhere;}
+  .cardio-item .rest-btn{flex:none;}
+  .circuit-card .note{margin-top:0;}
+  .footnote{
+    font-size:12.5px; color:var(--text-muted); line-height:1.5;
+    border-left:2px solid var(--border); padding-left:10px; margin:16px 0 4px;
+  }
   .primary-btn{
     width:100%; padding:12px; border-radius:10px; border:none; background:var(--red); color:#fff;
     font-family:'Oswald','Inter',sans-serif; letter-spacing:.03em; text-transform:uppercase; font-size:14px; font-weight:600;
@@ -375,10 +383,16 @@
       </table>
     </div>
     <div class="sec">
+      <h3>Estructura de cada sesión</h3>
+      <p>Los cuatro días siguen el mismo orden: <b style="color:var(--text)">Fuerza → Abdominales → Cardio final</b>.
+      El cardio de cierre cambia según qué tan cerca esté el TKD: escaladora solo el miércoles, y el viernes
+      —el día con más carga de pierna— un cardio corto y suave.</p>
+    </div>
+    <div class="sec">
       <h3>Progresión</h3>
       <p><b style="color:var(--text)">Tren superior:</b> doble progresión — primero repeticiones al techo del rango, luego sube peso y vuelve al piso.</p>
       <p><b style="color:var(--text)">Tren inferior:</b> progresa en calidad de ejecución (altura de salto, velocidad de patada), no en carga.</p>
-      <p><b style="color:var(--text)">Resistencia:</b> cada 2 semanas, reduce el descanso o suma una ronda.</p>
+      <p><b style="color:var(--text)">Resistencia:</b> cada 2 semanas, reduce el descanso entre series o suma una ronda al cardio final.</p>
       <p><b style="color:var(--text)">Deload:</b> cada 6–8 semanas, una semana con 40% menos volumen.</p>
     </div>
     <div class="sec">
@@ -414,59 +428,93 @@
 const DAYS = [
   { id:1, short:'D1', label:'Empuje', title:'Día 1 · Lunes', focus:'Tren superior — Empuje (hipertrofia) + core',
     warmup:{title:'Warm-up', duration:'8 min', detail:'Cardio suave 5 min + movilidad de hombro (rotaciones, band pull-apart) 3 min'},
-    exercises:[
-      {id:'d1e1', name:'Press banca plano (barra o máquina)', sets:'4×8–10', rest:90, note:'Sube peso cuando completes 4×10 con buena técnica', yt:'Pp8rHcFVIYg'},
-      {id:'d1e2', name:'Press inclinado con mancuernas', sets:'3×10–12', rest:75, note:'', yt:'QEY2z5LtB9Y'},
-      {id:'d1e3', name:'Press militar (máquina o mancuerna)', sets:'3×10–12', rest:75, note:'', yt:'BZInAZaEM3s'},
-      {id:'d1e4', name:'Elevaciones laterales', sets:'3×12–15', rest:60, note:'Tempo controlado, sin impulso', yt:'6a-sO62TN5E'},
-      {id:'d1e5', name:'Fondos en máquina', sets:'3×10–12', rest:60, note:'', yt:'pMarNxAvHPc'},
-      {id:'d1e6', name:'Extensión de tríceps en polea', sets:'3×12–15', rest:45, note:'', yt:'_w-HpW70nSQ'},
-      {id:'d1e7', name:'Plancha frontal', sets:'3×40–60s', rest:30, note:'', yt:'A2b2EmIg0dA'},
-      {id:'d1e8', name:'Elevación de piernas colgado', sets:'3×10–12', rest:45, note:'Activa flexores de cadera (útil para patada)', yt:'Pr1ieGZ5atk'},
-    ]
-  },
-  { id:2, short:'D2', label:'Tracción', title:'Día 2 · Martes AM', focus:'Tren superior — Tracción + resistencia', sub:'TKD esa noche — sin piernas',
-    exercises:[
-      {id:'d2e1', name:'Jalón al pecho o dominadas asistidas', sets:'4×8–10', rest:90, note:'', yt:'CAwf7n6Luuc'},
-      {id:'d2e2', name:'Remo en máquina (agarre neutro)', sets:'4×10–12', rest:75, note:'', yt:'OeLb503NZHk'},
-      {id:'d2e3', name:'Remo horizontal en polea baja', sets:'3×12', rest:60, note:'', yt:'YKAeU55CkVk'},
-      {id:'d2e4', name:'Face pull', sets:'3×15', rest:45, note:'Clave para salud de hombro tras el empuje del lunes', yt:'0Po47vvj9g4'},
-      {id:'d2e5', name:'Curl bíceps con mancuerna', sets:'3×10–12', rest:60, note:'', yt:'6DeLZ6cbgWQ'},
-      {id:'d2e6', name:'Curl martillo', sets:'3×12', rest:45, note:'', yt:'8XLxfXROrTo'},
-    ],
-    circuit:{title:'Circuito de resistencia', roundsLabel:'3–4 rondas', totalMin:10, restBetween:60,
-      items:[
-        {name:'Remo ergómetro', detail:'250m', yt:'UEN2JKg9u40'},
-        {name:'Burpees', detail:'10 reps', yt:'qLBImHhCXSw'},
-        {name:'Battle rope', detail:'30s', yt:'nzlmTiKqno0'},
-      ]}
-  },
-  { id:3, short:'D3', label:'Full Body', title:'Día 3 · Miércoles', focus:'Full body — Acondicionamiento / resistencia', sub:'Entre dos TKD — bajo impacto en piernas',
-    amrap:{title:'Circuito AMRAP', minutes:20, roundsLabel:'4–5 rondas', restBetween:'60–90s',
-      items:[
-        {name:'Bici Airdyne / elíptica', detail:'1 min fuerte', yt:'PHReR7tC_tw'},
-        {name:'Med ball slams', detail:'12 reps', yt:'EsAhU1jHpiQ'},
-        {name:'Farmer’s carry', detail:'40m', yt:'lLAw6fUccKA'},
-        {name:'Mountain climbers', detail:'30s', yt:'cnyTQDSE884'},
-        {name:'Remo ergómetro', detail:'250m', yt:'UEN2JKg9u40'},
+    blocks:[
+      {title:'Fuerza', exercises:[
+        {id:'d1e1', name:'Press banca plano (barra o máquina)', sets:'4×8–10', rest:90, note:'Sube peso cuando completes 4×10 con buena técnica', yt:'Pp8rHcFVIYg'},
+        {id:'d1e2', name:'Press inclinado con mancuernas', sets:'3×10–12', rest:75, note:'', yt:'QEY2z5LtB9Y'},
+        {id:'d1e3', name:'Press militar (máquina o mancuerna)', sets:'3×10–12', rest:75, note:'', yt:'BZInAZaEM3s'},
+        {id:'d1e4', name:'Elevaciones laterales', sets:'3×12–15', rest:60, note:'Tempo controlado, sin impulso', yt:'6a-sO62TN5E'},
+        {id:'d1e5', name:'Fondos en máquina', sets:'3×10–12', rest:60, note:'', yt:'pMarNxAvHPc'},
+        {id:'d1e6', name:'Extensión de tríceps en polea', sets:'3×12–15', rest:45, note:'', yt:'_w-HpW70nSQ'},
       ]},
-    exercises:[
-      {id:'d3e1', name:'Russian twist con peso', sets:'3×15 por lado', rest:30, note:'', yt:'IJDOoVyVjhc'},
-      {id:'d3e2', name:'Plancha lateral', sets:'3×30s por lado', rest:30, note:'', yt:'XeN4pEZZJNI'},
-    ]
+      {title:'Abdominales', exercises:[
+        {id:'d1e7', name:'Plancha frontal', sets:'3×40–60s', rest:30, note:'', yt:'A2b2EmIg0dA'},
+        {id:'d1e8', name:'Elevación de piernas acostado (suelo)', sets:'3×15–20', rest:45, note:'', yt:'Be3jdafVWAk'},
+      ]},
+    ],
+    cardio:{id:'d1c', title:'Elíptica o caminadora', meta:'10–12 min', totalMin:12,
+      detail:'Ritmo moderado. Día de hipertrofia — el cardio aquí es un cierre suave, no un segundo entrenamiento.'}
   },
+
+  { id:2, short:'D2', label:'Tracción', title:'Día 2 · Martes AM', focus:'Tren superior — Tracción + resistencia', sub:'TKD esa noche — sin piernas',
+    blocks:[
+      {title:'Fuerza', exercises:[
+        {id:'d2e1', name:'Jalón al pecho o dominadas asistidas', sets:'4×8–10', rest:90, note:'', yt:'CAwf7n6Luuc'},
+        {id:'d2e2', name:'Remo en máquina (agarre neutro)', sets:'4×10–12', rest:75, note:'', yt:'OeLb503NZHk'},
+        {id:'d2e3', name:'Remo horizontal en polea baja', sets:'3×12', rest:60, note:'', yt:'YKAeU55CkVk'},
+        {id:'d2e4', name:'Face pull', sets:'3×15', rest:45, note:'Clave para salud de hombro tras el empuje del lunes', yt:'0Po47vvj9g4'},
+        {id:'d2e5', name:'Curl bíceps con mancuerna', sets:'3×10–12', rest:60, note:'', yt:'6DeLZ6cbgWQ'},
+        {id:'d2e6', name:'Curl martillo', sets:'3×12', rest:45, note:'', yt:'8XLxfXROrTo'},
+      ]},
+      {title:'Abdominales', exercises:[
+        {id:'d2e7', name:'Plancha frontal', sets:'3×40s', rest:30, note:'', yt:'A2b2EmIg0dA'},
+        {id:'d2e8', name:'Russian twist con peso', sets:'3×15 por lado', rest:30, note:'', yt:'IJDOoVyVjhc'},
+      ]},
+    ],
+    cardio:{id:'d2c', title:'Elíptica + caminadora inclinada', meta:'~16 min · 2 rondas', totalMin:16, rounds:true,
+      items:[
+        {name:'Elíptica', detail:'4 min · moderada-alta', sec:240},
+        {name:'Caminadora inclinada 12–15%', detail:'4 min · sin trotar', sec:240},
+        {name:'Enfriamiento', detail:'2 min suave', sec:120},
+      ],
+      detail:'Dos rondas de elíptica + caminadora inclinada, y al cerrar 2 min de enfriamiento. Sin escaladora: es la máquina que más carga cuádriceps y glúteo, y esas piernas deben llegar frescas al TKD de esta noche.'}
+  },
+
+  { id:3, short:'D3', label:'Full Body', title:'Día 3 · Miércoles', focus:'Full body — Acondicionamiento / resistencia', sub:'Entre dos TKD — bajo impacto en piernas',
+    blocks:[
+      {title:'Fuerza · ritmo de resistencia', exercises:[
+        {id:'d3e1', name:'Press de pecho en máquina', sets:'3×15', rest:45, note:'Ritmo controlado, no al fallo', yt:'d-gwsl5BlMQ'},
+        {id:'d3e2', name:'Jalón dorsal en máquina', sets:'3×15', rest:45, note:'', yt:'CAwf7n6Luuc'},
+        {id:'d3e3', name:'Press de hombro en máquina', sets:'3×12', rest:45, note:'', yt:'BZInAZaEM3s'},
+        {id:'d3e4', name:'Remo sentado en máquina', sets:'3×15', rest:45, note:'', yt:'OeLb503NZHk'},
+        {id:'d3e5', name:'Farmer’s carry con mancuernas', sets:'3×40m', rest:45, note:'Full body, grip y core', yt:'lLAw6fUccKA'},
+        {id:'d3e6', name:'Push-ups explosivos', sets:'3×12–15', rest:45, note:'Mantiene el componente de potencia del día', yt:'iqj68r6CaDo'},
+      ]},
+      {title:'Abdominales', exercises:[
+        {id:'d3e7', name:'Russian twist con peso', sets:'3×15 por lado', rest:30, note:'', yt:'IJDOoVyVjhc'},
+        {id:'d3e8', name:'Plancha lateral', sets:'3×30s por lado', rest:30, note:'', yt:'XeN4pEZZJNI'},
+        {id:'d3e9', name:'Mountain climbers', sets:'3×30s', rest:30, note:'', yt:'cnyTQDSE884'},
+      ]},
+    ],
+    cardio:{id:'d3c', title:'Escaladora → elíptica → caminadora', meta:'12–15 min', totalMin:15,
+      items:[
+        {name:'Escaladora (stairmaster)', detail:'5 min · moderada-alta', sec:300},
+        {name:'Elíptica', detail:'5 min · moderada-alta', sec:300},
+        {name:'Caminadora', detail:'3–5 min · enfriamiento', sec:300},
+      ],
+      detail:'Hoy sí puede cargar pierna: no hay TKD esta noche.'}
+  },
+
   { id:4, short:'D4', label:'Piernas', title:'Día 4 · Viernes', focus:'Tren inferior — Potencia/velocidad + core rotacional', sub:'Kick-specific',
     warmup:{title:'Warm-up dinámico', duration:'10 min', detail:'Leg swings, hip circles, activación de glúteo con banda, saltos suaves'},
-    exercises:[
-      {id:'d4e1', name:'Sentadilla búlgara con mancuernas', sets:'3×8 por lado', rest:90, note:'Carga moderada, énfasis en explosión concéntrica', yt:'hiLF_pF3EJM'},
-      {id:'d4e2', name:'Peso muerto rumano con mancuernas', sets:'3×10', rest:90, note:'Hip hinge = patrón de "chamber" de patada', yt:'aa57T45iFSE'},
-      {id:'d4e3', name:'Hip thrust (máquina o barra)', sets:'3×10–12', rest:90, note:'Potencia de glúteo, motor principal de la patada', yt:'S_uZP4UH6J0'},
-      {id:'d4e4', name:'Zancada lateral con mancuernas', sets:'3×10 por lado', rest:75, note:'Mimetiza mecánica de dolyo chagi (patada circular)', yt:'R8jArZG2J6Q'},
-      {id:'d4e5', name:'Box jump', sets:'4×5', rest:120, note:'100% calidad/potencia — parar si baja la altura del salto', yt:'G-bxQY57mKc'},
-      {id:'d4e6', name:'Patada con banda de resistencia o polea baja', sets:'3×10 por lado', rest:60, note:'Front kick / roundhouse, prioriza velocidad sobre carga', yt:'vMG6bQBAex4'},
-      {id:'d4e7', name:'Elevación de talones (pantorrilla)', sets:'3×15–20', rest:45, note:'Para definición — no llevar al fallo', yt:'4HQ8Am9IuME'},
-      {id:'d4e8', name:'Cable woodchopper', sets:'3×12 por lado', rest:45, note:'Potencia rotacional de cadera = más fuerza en el giro de la patada', yt:'he4IhLc1d5k'},
-    ]
+    blocks:[
+      {title:'Fuerza y potencia', exercises:[
+        {id:'d4e1', name:'Box jump', sets:'4×5', rest:120, note:'Va primero: necesita el sistema nervioso 100% fresco para maximizar altura/potencia. Parar si baja la altura del salto', yt:'G-bxQY57mKc'},
+        {id:'d4e2', name:'Patada con banda de resistencia o polea baja', sets:'3×10 por lado', rest:60, note:'También va temprano por el mismo motivo — prioriza velocidad sobre carga', yt:'vMG6bQBAex4'},
+        {id:'d4e3', name:'Sentadilla búlgara con mancuernas', sets:'3×8 por lado', rest:90, note:'Carga moderada, énfasis en explosión concéntrica', yt:'hiLF_pF3EJM'},
+        {id:'d4e4', name:'Peso muerto rumano con mancuernas', sets:'3×10', rest:90, note:'Hip hinge = patrón de "chamber" de patada', yt:'aa57T45iFSE'},
+        {id:'d4e5', name:'Puente de glúteo en el suelo (mancuerna sobre la cadera)', sets:'3×10–12', rest:90, note:'Alternativa: cable pull-through en polea baja, si prefieres variar', yt:'BLy7Km090os'},
+        {id:'d4e6', name:'Zancada lateral con mancuernas', sets:'3×10 por lado', rest:75, note:'Mimetiza mecánica de dolyo chagi (patada circular)', yt:'R8jArZG2J6Q'},
+        {id:'d4e7', name:'Elevación de talones (pantorrilla)', sets:'3×15–20', rest:45, note:'Para definición — no llevar al fallo', yt:'4HQ8Am9IuME'},
+      ]},
+      {title:'Abdominales', exercises:[
+        {id:'d4e8', name:'Cable woodchopper', sets:'3×12 por lado', rest:45, note:'', yt:'he4IhLc1d5k'},
+        {id:'d4e9', name:'Plancha frontal', sets:'3×40s', rest:30, note:'', yt:'A2b2EmIg0dA'},
+      ]},
+    ],
+    cardio:{id:'d4c', title:'Caminadora suave', meta:'8–10 min', totalMin:10,
+      detail:'Paso moderado, sin inclinación pronunciada. Es el día con más carga de pierna de la semana (saltos + búlgara + RDL + puente + zancada) — un cardio corto y suave alcanza; nada de escaladora aquí.'},
+    footnote:'Volumen de piernas intencionalmente moderado-bajo: el objetivo es velocidad/potencia, no acumular más masa (eso ya lo aporta el TKD).'
   },
 ];
 
@@ -488,18 +536,17 @@ function todayKey(){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function dayById(id){ return DAYS.find(d=>d.id===id) || DAYS[0]; }
-function blockId(day){ return day.circuit ? `d${day.id}-circuit` : (day.amrap ? `d${day.id}-amrap` : null); }
-/* Ids completables del día: ejercicios + el bloque de circuito/AMRAP si existe */
+function dayExercises(day){ return (day.blocks||[]).flatMap(b=>b.exercises); }
+/* Ids completables del día: ejercicios de todos los bloques + el cardio final */
 function allExIds(day){
-  const ids = (day.exercises||[]).map(e=>e.id);
-  const b = blockId(day);
-  if(b) ids.push(b);
+  const ids = dayExercises(day).map(e=>e.id);
+  if(day.cardio) ids.push(day.cardio.id);
   return ids;
 }
 function announce(msg){ document.getElementById('srStatus').textContent = msg; }
 
 /* ============ STATE + PERSISTENCIA ============ */
-const STORE_KEY = 'rutina-tkd:v1';
+const STORE_KEY = 'rutina-tkd:v2';
 
 const state = {
   currentDay: 1,
@@ -626,41 +673,40 @@ function exCard(ex){
   </div>`;
 }
 
-function circuitItemRow(it){
-  return `<div class="circuit-item">${videoThumb(it.yt, it.name)}<span>${esc(it.name)}</span><span class="detail">${esc(it.detail)}</span></div>`;
+function cardioItemRow(it){
+  const timer = it.sec
+    ? `<button type="button" class="rest-btn" data-cardio-sec="${it.sec}" data-cardio-label="${esc(it.name)}">⏱ ${Math.round(it.sec/60)} min</button>`
+    : '';
+  return `<div class="circuit-item cardio-item">
+    <span class="ci-name">${esc(it.name)}</span>
+    <span class="detail">${esc(it.detail)}</span>${timer}</div>`;
 }
 
-function blockCard(day, block, kind){
-  const id = blockId(day);
-  const isDone = state.completed[day.id].has(id);
-  const meta = kind === 'circuit'
-    ? `${block.totalMin} min · ${block.roundsLabel}`
-    : `${block.minutes} min · ${block.roundsLabel}`;
-  const totalMin = kind === 'circuit' ? block.totalMin : block.minutes;
-  const startLabel = kind === 'circuit' ? `Iniciar circuito ${totalMin}:00` : `Iniciar AMRAP ${totalMin}:00`;
-  const restBtn = (kind === 'circuit' && typeof block.restBetween === 'number')
-    ? `<button type="button" class="rest-btn" id="circuitRestBtn" data-sec="${block.restBetween}"
-         style="margin-top:10px; width:100%; text-align:center; padding:9px;">⏱ Descanso entre rondas (${block.restBetween}s)</button>`
-    : '';
-
-  return `<div class="block-title">${kind === 'circuit' ? 'Circuito' : 'AMRAP'}</div>
-  <div class="circuit-card ${isDone?'done':''}" data-id="${esc(id)}">
-    <div class="circuit-head">
-      <h3>${esc(block.title)}</h3>
-      <div class="circuit-head-right">
-        <span class="circuit-meta">${esc(meta)}</span>
-        <button type="button" class="chk" data-check="${esc(id)}" aria-pressed="${isDone}"
-          aria-label="Marcar «${esc(block.title)}» como completado">✓</button>
-      </div>
-    </div>
-    <div class="circuit-list">${block.items.map(circuitItemRow).join('')}</div>
-    <button type="button" class="primary-btn" id="startCircuit" data-sec="${totalMin*60}" data-label="${esc(block.title)}">${esc(startLabel)}</button>
-    <div class="round-row">
+function cardioCard(day){
+  const c = day.cardio;
+  const isDone = state.completed[day.id].has(c.id);
+  const items = c.items ? `<div class="circuit-list">${c.items.map(cardioItemRow).join('')}</div>` : '';
+  const roundRow = c.rounds ? `<div class="round-row">
       <button type="button" class="round-btn" id="roundMinus" aria-label="Quitar una ronda">−</button>
       <span class="n mono" id="roundCount" role="status">0 rondas</span>
       <button type="button" class="round-btn" id="roundPlus" aria-label="Sumar una ronda">+</button>
+    </div>` : '';
+
+  return `<div class="block-title">Cardio final</div>
+  <div class="circuit-card ${isDone?'done':''}" data-id="${esc(c.id)}">
+    <div class="circuit-head">
+      <h3>${esc(c.title)}</h3>
+      <div class="circuit-head-right">
+        <span class="circuit-meta">${esc(c.meta)}</span>
+        <button type="button" class="chk" data-check="${esc(c.id)}" aria-pressed="${isDone}"
+          aria-label="Marcar «${esc(c.title)}» como completado">✓</button>
+      </div>
     </div>
-    ${restBtn}
+    ${items}
+    ${c.detail ? `<div class="note">${esc(c.detail)}</div>` : ''}
+    <button type="button" class="primary-btn" id="startCardio" data-sec="${c.totalMin*60}"
+      data-label="${esc(c.title)}" style="margin-top:12px;">Iniciar cardio ${c.totalMin}:00</button>
+    ${roundRow}
   </div>`;
 }
 
@@ -677,15 +723,15 @@ function renderDay(){
   if(day.warmup){
     html += `<div class="warmup-card"><b>${esc(day.warmup.title)}</b> · ${esc(day.warmup.duration)}<br>${esc(day.warmup.detail)}</div>`;
   }
-  if(day.amrap){
-    html += blockCard(day, day.amrap, 'amrap');
+  for(const block of (day.blocks||[])){
+    html += `<div class="block-title">${esc(block.title)}</div>`;
+    html += block.exercises.map(exCard).join('');
   }
-  if(day.exercises && day.exercises.length){
-    html += `<div class="block-title">Ejercicios</div>`;
-    html += day.exercises.map(exCard).join('');
+  if(day.cardio){
+    html += cardioCard(day);
   }
-  if(day.circuit){
-    html += blockCard(day, day.circuit, 'circuit');
+  if(day.footnote){
+    html += `<div class="footnote">${esc(day.footnote)}</div>`;
   }
 
   main.innerHTML = html;
@@ -707,16 +753,16 @@ function wireDayEvents(day){
     thumb.addEventListener('click', ()=> openVideo(thumb.dataset.yt, thumb.dataset.title, thumb));
   });
 
-  const startCircuit = document.getElementById('startCircuit');
-  if(startCircuit){
-    startCircuit.addEventListener('click', ()=>{
-      openTimer(parseInt(startCircuit.dataset.sec,10), startCircuit.dataset.label, startCircuit);
+  document.querySelectorAll('[data-cardio-sec]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      openTimer(parseInt(btn.dataset.cardioSec,10), btn.dataset.cardioLabel, btn);
     });
-  }
-  const circuitRestBtn = document.getElementById('circuitRestBtn');
-  if(circuitRestBtn){
-    circuitRestBtn.addEventListener('click', ()=>{
-      openTimer(parseInt(circuitRestBtn.dataset.sec,10), 'Descanso entre rondas', circuitRestBtn);
+  });
+
+  const startCardio = document.getElementById('startCardio');
+  if(startCardio){
+    startCardio.addEventListener('click', ()=>{
+      openTimer(parseInt(startCardio.dataset.sec,10), startCardio.dataset.label, startCardio);
     });
   }
 
@@ -856,7 +902,7 @@ function releaseWakeLock(){
   wakeLock = null;
 }
 
-/* ============ CRONÓMETRO DE DESCANSO / CIRCUITO ============ */
+/* ============ CRONÓMETRO DE DESCANSO / CARDIO ============ */
 const RING_R = 100;
 const RING_CIRC = 2 * Math.PI * RING_R;
 
