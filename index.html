@@ -144,7 +144,7 @@
   /* Day tabs */
   .tabs{display:flex; gap:6px;}
   .tab{
-    flex:1; text-align:center; padding:9px 4px; border-radius:10px;
+    flex:1; min-width:0; text-align:center; padding:9px 4px; border-radius:10px;
     background:var(--surface); border:1px solid var(--border);
     font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11.5px; color:var(--text-muted);
     cursor:pointer; line-height:1.3;
@@ -196,7 +196,10 @@
     width:26px; height:26px; border-radius:7px; border:1.5px solid var(--border);
     background:var(--surface-2); flex:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
     color:transparent; font-size:14px; padding:0; line-height:1;
+    position:relative;
   }
+  /* El check se ve de 26px pero se toca en 40px: sudado y con el pulgar hace la diferencia */
+  .chk::after{content:''; position:absolute; inset:-7px;}
   .card.done .chk,
   .circuit-card.done .chk{background:var(--green); border-color:var(--green); color:#0B0D10;}
   .meta-row{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; align-items:center;}
@@ -207,7 +210,11 @@
   .rest-btn{
     font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; background:var(--teal-dim);
     border:1px solid #1c4d47; border-radius:7px; padding:4px 9px; color:var(--teal); cursor:pointer;
+    position:relative;
   }
+  /* Mismo truco que en .chk: alto táctil de 40px sin agrandar el chip.
+     Solo en vertical, para no pisar los chips de al lado. */
+  .rest-btn::after{content:''; position:absolute; left:0; right:0; top:-9px; bottom:-9px;}
   .rest-btn:active{transform:scale(0.96);}
   .note{font-size:12.5px; color:var(--text-muted); margin-top:6px; line-height:1.4;}
 
@@ -317,6 +324,135 @@
     text-align:center; font-size:11px; color:var(--text-muted); padding:20px;
     font-family:'IBM Plex Mono',ui-monospace,monospace; line-height:1.6;
   }
+
+  /* ---------- AVISO DE ALMACENAMIENTO ---------- */
+  .storage-warn{
+    margin:0; padding:9px 16px; text-align:center;
+    background:var(--red-dim); border-bottom:1px solid var(--red); color:#ffb4ba;
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11.5px; line-height:1.45;
+  }
+  .storage-warn[hidden]{display:none;}
+
+  /* La quinta pestaña no es un día: va compacta para que los cuatro días
+     conserven su ancho en pantallas de 360px. */
+  .tab.tab-inv{
+    flex:0 0 auto; padding:9px 11px;
+    display:flex; flex-direction:column; justify-content:center;
+  }
+  .tab.tab-inv b{font-size:13px;}
+
+  /* ---------- CONTROLES COMUNES ---------- */
+  .inp{
+    width:100%; min-height:42px; background:var(--surface-2); color:var(--text);
+    border:1px solid var(--border); border-radius:10px; padding:10px 11px;
+    font-family:'Inter',system-ui,sans-serif; font-size:14px;
+  }
+  textarea.inp{resize:vertical; line-height:1.45;}
+  select.inp{appearance:none; -webkit-appearance:none;}
+  .inp::placeholder{color:#6b737d;}
+  .inp.bad{border-color:var(--red);}
+  .sq-btn{
+    width:40px; height:40px; flex:none; padding:0; line-height:1;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+    color:var(--text); font-size:16px; cursor:pointer;
+  }
+  .sq-btn:active{transform:scale(0.94);}
+  .sq-btn.danger{color:#ff9aa2; border-color:#5a2429;}
+  .ghost-btn.small{min-height:40px; padding:9px 13px; font-size:12.5px;}
+  .ghost-btn.danger{color:#ff9aa2; border-color:#5a2429;}
+  .add-btn{
+    width:100%; min-height:44px; padding:11px;
+    background:var(--surface-2); border:1px dashed var(--border); border-radius:10px;
+    color:var(--teal); font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:13px; cursor:pointer;
+  }
+  .add-btn:active{transform:scale(0.99);}
+  .empty-note{
+    font-size:12.5px; color:var(--text-muted); line-height:1.45;
+    background:var(--surface-2); border:1px dashed var(--border);
+    border-radius:var(--radius); padding:12px; margin-bottom:10px;
+  }
+  .day-actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:10px;}
+  .edit-hint{font-size:11px; color:var(--text-muted); font-family:'IBM Plex Mono',ui-monospace,monospace;}
+
+  /* Miniatura vacía: mismo hueco, sin video */
+  .vid-thumb.empty{display:flex; align-items:center; justify-content:center; cursor:default;}
+  .vid-thumb.empty::after{content:none;}
+  .vid-thumb.empty svg{width:26px; height:26px; fill:#3c434b;}
+
+  /* ---------- MODO EDICIÓN DE LA RUTINA ---------- */
+  .edit-list{display:flex; flex-direction:column; gap:8px; margin-bottom:12px;}
+  .edit-item{
+    display:flex; align-items:center; gap:10px; padding:8px 10px;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  }
+  .ei-body{flex:1; min-width:0;}
+  .ei-name{font-size:13.5px; font-weight:600; line-height:1.3;}
+  .ei-meta{font-size:11.5px; color:var(--text-muted); margin-top:3px;}
+  .ei-actions{display:flex; gap:6px; flex:none;}
+
+  /* ---------- INVENTARIO ---------- */
+  .inv-toolbar{display:flex; flex-direction:column; gap:8px; margin-bottom:14px;}
+  .inv-card{
+    display:flex; gap:12px; align-items:flex-start; padding:12px; margin-bottom:10px;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  }
+  .inv-card .vid-thumb{width:52px; height:52px; border-radius:9px;}
+  .inv-card .vid-thumb .play svg{width:17px; height:17px;}
+  .inv-card .vid-thumb.empty svg{width:22px; height:22px;}
+  .ic-name{font-size:14.5px; font-weight:600; line-height:1.3;}
+  .ic-used{font-size:11px; color:var(--text-muted); margin-top:7px;}
+  .ic-actions{display:flex; flex-direction:column; gap:6px; flex:none;}
+  .chip.muted{color:var(--text-muted);}
+
+  /* ---------- FORMULARIO DE EJERCICIO ---------- */
+  .ex-form{
+    display:flex; flex-direction:column; gap:10px; padding:14px; margin-bottom:12px;
+    background:var(--surface-2); border:1px solid var(--teal); border-radius:var(--radius);
+  }
+  .form-title{font-size:14px;}
+  .ex-form .f{
+    display:flex; flex-direction:column; gap:5px; flex:1; min-width:0;
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:10.5px;
+    text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted);
+  }
+  .f-row{display:flex; gap:9px;}
+  .f-err{margin:-5px 0 0; font-size:12px; color:#ff9aa2; line-height:1.4;}
+  .f-err[hidden]{display:none;}
+  .f-actions{display:flex; gap:10px; margin-top:4px;}
+  .f-actions .primary-btn{flex:1;}
+  .f-actions .ghost-btn{flex:none; min-height:44px;}
+  .yt-preview{display:flex; align-items:center; gap:10px;}
+  .yt-preview:empty{display:none;}
+  .yt-preview img{width:92px; height:auto; border-radius:8px; border:1px solid var(--border);}
+  .yt-preview span{font-size:11px; color:var(--text-muted);}
+
+  /* ---------- SECCIÓN DATOS ---------- */
+  .data-box{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:14px;
+  }
+  .data-box .note{margin-top:0;}
+  .data-actions{display:flex; flex-direction:column; gap:8px; margin-top:12px;}
+  .data-actions .ghost-btn{width:100%; min-height:44px;}
+
+  /* ---------- SELECTOR DE EJERCICIOS / IMPORTAR ---------- */
+  .picker-list{display:flex; flex-direction:column; gap:8px; margin:12px 0;}
+  .picker-item{
+    display:flex; flex-direction:column; align-items:flex-start; gap:3px;
+    width:100%; min-height:48px; padding:11px 12px; text-align:left;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+    color:var(--text); cursor:pointer;
+  }
+  .picker-item:active{transform:scale(0.99);}
+  .pi-name{font-size:13.5px; font-weight:600; line-height:1.3;}
+  .pi-meta{font-size:11.5px; color:var(--text-muted);}
+  .modal-sheet .inp{margin-bottom:10px;}
+  .file-row{margin:0 0 10px;}
+  .file-row input[type="file"]{
+    font-size:12.5px; color:var(--text-muted); font-family:'Inter',system-ui,sans-serif;
+    width:100%; min-height:44px;
+  }
+  .modal-sheet .primary-btn{margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -340,6 +476,7 @@
   <div class="belt-label"><span id="beltLabelText">0 / 0 ejercicios</span><span id="beltPct">0%</span></div>
   <div class="tabs" id="tabs" role="tablist" aria-label="Días de entrenamiento"></div>
 </header>
+<p class="storage-warn" id="storageWarn" role="status" hidden>Este navegador no me deja guardar datos: puedes usar la app, pero los cambios se pierden al cerrarla.</p>
 
 <main id="main" role="tabpanel" tabindex="-1"></main>
 
@@ -404,8 +541,19 @@
       Regla de oro: el día de piernas nunca cae el mismo día ni el día anterior a TKD. Si no hay 48h de margen, reduce a la mitad la pliometría.</p>
     </div>
     <div class="sec">
+      <h3>Inventario y rutinas</h3>
+      <p>Los ejercicios viven en un solo lugar: la pestaña <b style="color:var(--text)">INV</b> (Inventario).
+      Ahí editas series, reps o tiempo, peso, descanso, nota y video, y el cambio se ve en todos los días
+      que usan ese ejercicio.</p>
+      <p>Cada día guarda solo la lista ordenada de ejercicios. Con <b style="color:var(--text)">«Editar rutina»</b>
+      puedes agregar, quitar y reordenar (↑ ↓; en el borde de un bloque el ejercicio pasa al bloque vecino).
+      El warm-up y el cardio final son fijos: no salen del inventario.</p>
+    </div>
+    <div class="sec">
       <h3>Datos guardados</h3>
-      <p>Tu progreso se guarda en este dispositivo (<i>localStorage</i>) y se reinicia solo cuando cambia el día.
+      <p>Tu progreso (checks, rondas y cronómetro) se guarda en este dispositivo (<i>localStorage</i>) y se
+      reinicia solo cuando cambia el día. Tu inventario y tus rutinas se guardan aparte y <b style="color:var(--text)">no</b>
+      se reinician nunca; en Inventario → <i>Datos</i> puedes exportarlas o importarlas como JSON.
       Nada sale del teléfono.</p>
       <button class="ghost-btn" id="resetDayBtn" style="margin-top:6px;">Reiniciar progreso de hoy</button>
     </div>
@@ -423,44 +571,56 @@
   </div>
 </div>
 
+<!-- Selector de ejercicios del inventario (modo edición de la rutina) -->
+<div class="modal" id="pickerModal" role="dialog" aria-modal="true" aria-labelledby="pickerTitle" hidden>
+  <div class="modal-sheet">
+    <h3 id="pickerTitle">Agregar ejercicio</h3>
+    <div class="sec">
+      <input type="search" class="inp" id="pickerSearch" placeholder="Buscar en el inventario…"
+        aria-label="Buscar ejercicio en el inventario" autocomplete="off">
+      <div class="picker-list" id="pickerList"></div>
+    </div>
+    <button class="ghost-btn modal-close" id="pickerClose">Cerrar</button>
+  </div>
+</div>
+
+<!-- Importar respaldo JSON -->
+<div class="modal" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importTitle" hidden>
+  <div class="modal-sheet">
+    <h3 id="importTitle">Importar JSON</h3>
+    <div class="sec">
+      <p>Pega el contenido del respaldo o elige el archivo. Se valida el formato antes de
+      reemplazar tu inventario y tus rutinas.</p>
+      <div class="file-row">
+        <input type="file" id="importFile" accept="application/json,.json" aria-label="Elegir archivo JSON">
+      </div>
+      <textarea class="inp" id="importText" rows="6" placeholder='{"schemaVersion":1,"inventory":[…],"routines":{…}}'
+        aria-label="JSON a importar" spellcheck="false"></textarea>
+      <p class="f-err" id="importErr" role="alert" hidden></p>
+    </div>
+    <button class="primary-btn" id="importApply">Validar e importar</button>
+    <button class="ghost-btn modal-close" id="importClose">Cancelar</button>
+  </div>
+</div>
+
 <script>
-/* ============ DATA ============ */
+/* ============ DATOS ============
+   DAYS            → metadatos de cada día y bloques especiales (warm-up y cardio
+                     final). Estos bloques son fijos: no viven en el inventario.
+   SEED_INVENTORY  → semilla del inventario (fuente única de verdad de los ejercicios).
+   SEED_ROUTINES   → semilla de la rutina de cada día: solo ids del inventario, en orden.
+
+   Las dos semillas se copian a localStorage la primera vez que abres la app; desde
+   ahí los datos son tuyos y se editan desde la pestaña «Inventario» y con «Editar
+   rutina» en cada día. «Restaurar valores originales» vuelve a esta semilla. */
 const DAYS = [
   { id:1, short:'D1', label:'Empuje', title:'Día 1 · Lunes', focus:'Tren superior — Empuje (hipertrofia) + core',
     warmup:{title:'Warm-up', duration:'8 min', detail:'Cardio suave 5 min + movilidad de hombro (rotaciones, band pull-apart) 3 min'},
-    blocks:[
-      {title:'Fuerza', exercises:[
-        {id:'d1e1', name:'Press banca plano (barra o máquina)', sets:'4×8–10', rest:90, note:'Sube peso cuando completes 4×10 con buena técnica', yt:'Pp8rHcFVIYg'},
-        {id:'d1e2', name:'Press inclinado con mancuernas', sets:'3×10–12', rest:75, note:'', yt:'QEY2z5LtB9Y'},
-        {id:'d1e3', name:'Press militar (máquina o mancuerna)', sets:'3×10–12', rest:75, note:'', yt:'BZInAZaEM3s'},
-        {id:'d1e4', name:'Elevaciones laterales', sets:'3×12–15', rest:60, note:'Tempo controlado, sin impulso', yt:'6a-sO62TN5E'},
-        {id:'d1e5', name:'Fondos en máquina', sets:'3×10–12', rest:60, note:'', yt:'pMarNxAvHPc'},
-        {id:'d1e6', name:'Extensión de tríceps en polea', sets:'3×12–15', rest:45, note:'', yt:'_w-HpW70nSQ'},
-      ]},
-      {title:'Abdominales', exercises:[
-        {id:'d1e7', name:'Plancha frontal', sets:'3×40–60s', rest:30, note:'', yt:'A2b2EmIg0dA'},
-        {id:'d1e8', name:'Elevación de piernas acostado (suelo)', sets:'3×15–20', rest:45, note:'', yt:'Be3jdafVWAk'},
-      ]},
-    ],
     cardio:{id:'d1c', title:'Elíptica o caminadora', meta:'10–12 min', totalMin:12,
       detail:'Ritmo moderado. Día de hipertrofia — el cardio aquí es un cierre suave, no un segundo entrenamiento.'}
   },
 
   { id:2, short:'D2', label:'Tracción', title:'Día 2 · Martes AM', focus:'Tren superior — Tracción + resistencia', sub:'TKD esa noche — sin piernas',
-    blocks:[
-      {title:'Fuerza', exercises:[
-        {id:'d2e1', name:'Jalón al pecho o dominadas asistidas', sets:'4×8–10', rest:90, note:'', yt:'CAwf7n6Luuc'},
-        {id:'d2e2', name:'Remo en máquina (agarre neutro)', sets:'4×10–12', rest:75, note:'', yt:'OeLb503NZHk'},
-        {id:'d2e3', name:'Remo horizontal en polea baja', sets:'3×12', rest:60, note:'', yt:'YKAeU55CkVk'},
-        {id:'d2e4', name:'Face pull', sets:'3×15', rest:45, note:'Clave para salud de hombro tras el empuje del lunes', yt:'0Po47vvj9g4'},
-        {id:'d2e5', name:'Curl bíceps con mancuerna', sets:'3×10–12', rest:60, note:'', yt:'6DeLZ6cbgWQ'},
-        {id:'d2e6', name:'Curl martillo', sets:'3×12', rest:45, note:'', yt:'8XLxfXROrTo'},
-      ]},
-      {title:'Abdominales', exercises:[
-        {id:'d2e7', name:'Plancha frontal', sets:'3×40s', rest:30, note:'', yt:'A2b2EmIg0dA'},
-        {id:'d2e8', name:'Russian twist con peso', sets:'3×15 por lado', rest:30, note:'', yt:'IJDOoVyVjhc'},
-      ]},
-    ],
     cardio:{id:'d2c', title:'Elíptica + caminadora inclinada', meta:'~16 min · 2 rondas', totalMin:16, rounds:true,
       items:[
         {name:'Elíptica', detail:'4 min · moderada-alta', sec:240},
@@ -471,21 +631,6 @@ const DAYS = [
   },
 
   { id:3, short:'D3', label:'Full Body', title:'Día 3 · Miércoles', focus:'Full body — Acondicionamiento / resistencia', sub:'Entre dos TKD — bajo impacto en piernas',
-    blocks:[
-      {title:'Fuerza · ritmo de resistencia', exercises:[
-        {id:'d3e1', name:'Press de pecho en máquina', sets:'3×15', rest:45, note:'Ritmo controlado, no al fallo', yt:'d-gwsl5BlMQ'},
-        {id:'d3e2', name:'Jalón dorsal en máquina', sets:'3×15', rest:45, note:'', yt:'CAwf7n6Luuc'},
-        {id:'d3e3', name:'Press de hombro en máquina', sets:'3×12', rest:45, note:'', yt:'BZInAZaEM3s'},
-        {id:'d3e4', name:'Remo sentado en máquina', sets:'3×15', rest:45, note:'', yt:'OeLb503NZHk'},
-        {id:'d3e5', name:'Farmer’s carry con mancuernas', sets:'3×40m', rest:45, note:'Full body, grip y core', yt:'lLAw6fUccKA'},
-        {id:'d3e6', name:'Push-ups explosivos', sets:'3×12–15', rest:45, note:'Mantiene el componente de potencia del día', yt:'iqj68r6CaDo'},
-      ]},
-      {title:'Abdominales', exercises:[
-        {id:'d3e7', name:'Russian twist con peso', sets:'3×15 por lado', rest:30, note:'', yt:'IJDOoVyVjhc'},
-        {id:'d3e8', name:'Plancha lateral', sets:'3×30s por lado', rest:30, note:'', yt:'XeN4pEZZJNI'},
-        {id:'d3e9', name:'Mountain climbers', sets:'3×30s', rest:30, note:'', yt:'cnyTQDSE884'},
-      ]},
-    ],
     cardio:{id:'d3c', title:'Escaladora → elíptica → caminadora', meta:'12–15 min', totalMin:15,
       items:[
         {name:'Escaladora (stairmaster)', detail:'5 min · moderada-alta', sec:300},
@@ -497,26 +642,64 @@ const DAYS = [
 
   { id:4, short:'D4', label:'Piernas', title:'Día 4 · Viernes', focus:'Tren inferior — Potencia/velocidad + core rotacional', sub:'Kick-specific',
     warmup:{title:'Warm-up dinámico', duration:'10 min', detail:'Leg swings, hip circles, activación de glúteo con banda, saltos suaves'},
-    blocks:[
-      {title:'Fuerza y potencia', exercises:[
-        {id:'d4e1', name:'Box jump', sets:'4×5', rest:120, note:'Va primero: necesita el sistema nervioso 100% fresco para maximizar altura/potencia. Parar si baja la altura del salto', yt:'G-bxQY57mKc'},
-        {id:'d4e2', name:'Patada con banda de resistencia o polea baja', sets:'3×10 por lado', rest:60, note:'También va temprano por el mismo motivo — prioriza velocidad sobre carga', yt:'vMG6bQBAex4'},
-        {id:'d4e3', name:'Sentadilla búlgara con mancuernas', sets:'3×8 por lado', rest:90, note:'Carga moderada, énfasis en explosión concéntrica', yt:'hiLF_pF3EJM'},
-        {id:'d4e4', name:'Peso muerto rumano con mancuernas', sets:'3×10', rest:90, note:'Hip hinge = patrón de "chamber" de patada', yt:'aa57T45iFSE'},
-        {id:'d4e5', name:'Puente de glúteo en el suelo (mancuerna sobre la cadera)', sets:'3×10–12', rest:90, note:'Alternativa: cable pull-through en polea baja, si prefieres variar', yt:'BLy7Km090os'},
-        {id:'d4e6', name:'Zancada lateral con mancuernas', sets:'3×10 por lado', rest:75, note:'Mimetiza mecánica de dolyo chagi (patada circular)', yt:'R8jArZG2J6Q'},
-        {id:'d4e7', name:'Elevación de talones (pantorrilla)', sets:'3×15–20', rest:45, note:'Para definición — no llevar al fallo', yt:'4HQ8Am9IuME'},
-      ]},
-      {title:'Abdominales', exercises:[
-        {id:'d4e8', name:'Cable woodchopper', sets:'3×12 por lado', rest:45, note:'', yt:'he4IhLc1d5k'},
-        {id:'d4e9', name:'Plancha frontal', sets:'3×40s', rest:30, note:'', yt:'A2b2EmIg0dA'},
-      ]},
-    ],
     cardio:{id:'d4c', title:'Caminadora suave', meta:'8–10 min', totalMin:10,
       detail:'Paso moderado, sin inclinación pronunciada. Es el día con más carga de pierna de la semana (saltos + búlgara + RDL + puente + zancada) — un cardio corto y suave alcanza; nada de escaladora aquí.'},
     footnote:'Volumen de piernas intencionalmente moderado-bajo: el objetivo es velocidad/potencia, no acumular más masa (eso ya lo aporta el TKD).'
   },
 ];
+
+const SEED_INVENTORY = [
+  {id:"ex-1", name:"Press banca plano (barra o máquina)", measure:"reps", sets:4, value:"8–10", suffix:"", weight:null, unit:"kg", rest:90, note:"Sube peso cuando completes 4×10 con buena técnica", yt:"Pp8rHcFVIYg"},
+  {id:"ex-2", name:"Press inclinado con mancuernas", measure:"reps", sets:3, value:"10–12", suffix:"", weight:null, unit:"kg", rest:75, note:"", yt:"QEY2z5LtB9Y"},
+  {id:"ex-3", name:"Press militar (máquina o mancuerna)", measure:"reps", sets:3, value:"10–12", suffix:"", weight:null, unit:"kg", rest:75, note:"", yt:"BZInAZaEM3s"},
+  {id:"ex-4", name:"Elevaciones laterales", measure:"reps", sets:3, value:"12–15", suffix:"", weight:null, unit:"kg", rest:60, note:"Tempo controlado, sin impulso", yt:"6a-sO62TN5E"},
+  {id:"ex-5", name:"Fondos en máquina", measure:"reps", sets:3, value:"10–12", suffix:"", weight:null, unit:"kg", rest:60, note:"", yt:"pMarNxAvHPc"},
+  {id:"ex-6", name:"Extensión de tríceps en polea", measure:"reps", sets:3, value:"12–15", suffix:"", weight:null, unit:"kg", rest:45, note:"", yt:"_w-HpW70nSQ"},
+  {id:"ex-7", name:"Plancha frontal", measure:"time", sets:3, value:"40–60", suffix:"", weight:null, unit:"kg", rest:30, note:"", yt:"A2b2EmIg0dA"},
+  {id:"ex-8", name:"Elevación de piernas acostado (suelo)", measure:"reps", sets:3, value:"15–20", suffix:"", weight:null, unit:"kg", rest:45, note:"", yt:"Be3jdafVWAk"},
+  {id:"ex-9", name:"Jalón al pecho o dominadas asistidas", measure:"reps", sets:4, value:"8–10", suffix:"", weight:null, unit:"kg", rest:90, note:"", yt:"CAwf7n6Luuc"},
+  {id:"ex-10", name:"Remo en máquina (agarre neutro)", measure:"reps", sets:4, value:"10–12", suffix:"", weight:null, unit:"kg", rest:75, note:"", yt:"OeLb503NZHk"},
+  {id:"ex-11", name:"Remo horizontal en polea baja", measure:"reps", sets:3, value:"12", suffix:"", weight:null, unit:"kg", rest:60, note:"", yt:"YKAeU55CkVk"},
+  {id:"ex-12", name:"Face pull", measure:"reps", sets:3, value:"15", suffix:"", weight:null, unit:"kg", rest:45, note:"Clave para salud de hombro tras el empuje del lunes", yt:"0Po47vvj9g4"},
+  {id:"ex-13", name:"Curl bíceps con mancuerna", measure:"reps", sets:3, value:"10–12", suffix:"", weight:null, unit:"kg", rest:60, note:"", yt:"6DeLZ6cbgWQ"},
+  {id:"ex-14", name:"Curl martillo", measure:"reps", sets:3, value:"12", suffix:"", weight:null, unit:"kg", rest:45, note:"", yt:"8XLxfXROrTo"},
+  {id:"ex-15", name:"Russian twist con peso", measure:"reps", sets:3, value:"15", suffix:"por lado", weight:null, unit:"kg", rest:30, note:"", yt:"IJDOoVyVjhc"},
+  {id:"ex-16", name:"Press de pecho en máquina", measure:"reps", sets:3, value:"15", suffix:"", weight:null, unit:"kg", rest:45, note:"Ritmo controlado, no al fallo", yt:"d-gwsl5BlMQ"},
+  {id:"ex-17", name:"Jalón dorsal en máquina", measure:"reps", sets:3, value:"15", suffix:"", weight:null, unit:"kg", rest:45, note:"", yt:"CAwf7n6Luuc"},
+  {id:"ex-18", name:"Press de hombro en máquina", measure:"reps", sets:3, value:"12", suffix:"", weight:null, unit:"kg", rest:45, note:"", yt:"BZInAZaEM3s"},
+  {id:"ex-19", name:"Remo sentado en máquina", measure:"reps", sets:3, value:"15", suffix:"", weight:null, unit:"kg", rest:45, note:"", yt:"OeLb503NZHk"},
+  {id:"ex-20", name:"Farmer’s carry con mancuernas", measure:"reps", sets:3, value:"40", suffix:"m", weight:null, unit:"kg", rest:45, note:"Full body, grip y core", yt:"lLAw6fUccKA"},
+  {id:"ex-21", name:"Push-ups explosivos", measure:"reps", sets:3, value:"12–15", suffix:"", weight:null, unit:"kg", rest:45, note:"Mantiene el componente de potencia del día", yt:"iqj68r6CaDo"},
+  {id:"ex-22", name:"Plancha lateral", measure:"time", sets:3, value:"30", suffix:"por lado", weight:null, unit:"kg", rest:30, note:"", yt:"XeN4pEZZJNI"},
+  {id:"ex-23", name:"Mountain climbers", measure:"time", sets:3, value:"30", suffix:"", weight:null, unit:"kg", rest:30, note:"", yt:"cnyTQDSE884"},
+  {id:"ex-24", name:"Box jump", measure:"reps", sets:4, value:"5", suffix:"", weight:null, unit:"kg", rest:120, note:"Va primero: necesita el sistema nervioso 100% fresco para maximizar altura/potencia. Parar si baja la altura del salto", yt:"G-bxQY57mKc"},
+  {id:"ex-25", name:"Patada con banda de resistencia o polea baja", measure:"reps", sets:3, value:"10", suffix:"por lado", weight:null, unit:"kg", rest:60, note:"También va temprano por el mismo motivo — prioriza velocidad sobre carga", yt:"vMG6bQBAex4"},
+  {id:"ex-26", name:"Sentadilla búlgara con mancuernas", measure:"reps", sets:3, value:"8", suffix:"por lado", weight:null, unit:"kg", rest:90, note:"Carga moderada, énfasis en explosión concéntrica", yt:"hiLF_pF3EJM"},
+  {id:"ex-27", name:"Peso muerto rumano con mancuernas", measure:"reps", sets:3, value:"10", suffix:"", weight:null, unit:"kg", rest:90, note:"Hip hinge = patrón de \"chamber\" de patada", yt:"aa57T45iFSE"},
+  {id:"ex-28", name:"Puente de glúteo en el suelo (mancuerna sobre la cadera)", measure:"reps", sets:3, value:"10–12", suffix:"", weight:null, unit:"kg", rest:90, note:"Alternativa: cable pull-through en polea baja, si prefieres variar", yt:"BLy7Km090os"},
+  {id:"ex-29", name:"Zancada lateral con mancuernas", measure:"reps", sets:3, value:"10", suffix:"por lado", weight:null, unit:"kg", rest:75, note:"Mimetiza mecánica de dolyo chagi (patada circular)", yt:"R8jArZG2J6Q"},
+  {id:"ex-30", name:"Elevación de talones (pantorrilla)", measure:"reps", sets:3, value:"15–20", suffix:"", weight:null, unit:"kg", rest:45, note:"Para definición — no llevar al fallo", yt:"4HQ8Am9IuME"},
+  {id:"ex-31", name:"Cable woodchopper", measure:"reps", sets:3, value:"12", suffix:"por lado", weight:null, unit:"kg", rest:45, note:"", yt:"he4IhLc1d5k"},
+];
+
+const SEED_ROUTINES = {
+  1: [
+    {title:"Fuerza", ids:["ex-1", "ex-2", "ex-3", "ex-4", "ex-5", "ex-6"]},
+    {title:"Abdominales", ids:["ex-7", "ex-8"]},
+  ],
+  2: [
+    {title:"Fuerza", ids:["ex-9", "ex-10", "ex-11", "ex-12", "ex-13", "ex-14"]},
+    {title:"Abdominales", ids:["ex-7", "ex-15"]},
+  ],
+  3: [
+    {title:"Fuerza · ritmo de resistencia", ids:["ex-16", "ex-17", "ex-18", "ex-19", "ex-20", "ex-21"]},
+    {title:"Abdominales", ids:["ex-15", "ex-22", "ex-23"]},
+  ],
+  4: [
+    {title:"Fuerza y potencia", ids:["ex-24", "ex-25", "ex-26", "ex-27", "ex-28", "ex-29", "ex-30"]},
+    {title:"Abdominales", ids:["ex-31", "ex-7"]},
+  ],
+};
 
 /* Qué día mostrar según el día de la semana (0=domingo) */
 const WEEKDAY_TO_DAY = {0:1, 1:1, 2:2, 3:3, 4:4, 5:4, 6:1};
@@ -536,20 +719,117 @@ function todayKey(){
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function dayById(id){ return DAYS.find(d=>d.id===id) || DAYS[0]; }
-function dayExercises(day){ return (day.blocks||[]).flatMap(b=>b.exercises); }
-/* Ids completables del día: ejercicios de todos los bloques + el cardio final */
+function announce(msg){ document.getElementById('srStatus').textContent = msg; }
+
+/* ---- Inventario y rutinas ---- */
+/* Nombre normalizado: sin tildes, sin mayúsculas, sin espacios dobles.
+   Es la clave con la que detectamos nombres duplicados. */
+function normName(s){
+  return String(s == null ? '' : s).toLowerCase().normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+}
+function invById(id){ return data.inventory.find(it=>it.id===id) || null; }
+
+/* Bloques de la rutina de un día, ya resueltos contra el inventario.
+   Un id que ya no existe simplemente se ignora (no rompe el render). */
+function dayBlocks(dayId){
+  return (data.routines[dayId] || []).map(b=>({
+    title: b.title,
+    items: b.ids.map(invById).filter(Boolean),
+  }));
+}
+function dayItems(dayId){ return dayBlocks(dayId).flatMap(b=>b.items); }
+
+/* Ids completables del día: ejercicios de la rutina + el cardio final */
 function allExIds(day){
-  const ids = dayExercises(day).map(e=>e.id);
+  const ids = dayItems(day.id).map(it=>it.id);
   if(day.cardio) ids.push(day.cardio.id);
   return ids;
 }
-function announce(msg){ document.getElementById('srStatus').textContent = msg; }
+/* En qué días está usado un ejercicio (para avisar antes de borrarlo) */
+function daysUsing(id){
+  return DAYS.filter(d=>(data.routines[d.id]||[]).some(b=>b.ids.includes(id))).map(d=>d.id);
+}
+
+/* ---- Etiquetas ---- */
+function setsLabel(it){
+  const v = it.measure === 'time' ? it.value + 's' : it.value;
+  return `${it.sets}×${v}${it.suffix ? ' ' + it.suffix : ''}`;
+}
+function weightLabel(it){
+  return (it.weight === null || it.weight === undefined || it.weight === '') ? '' : `${it.weight} ${it.unit || 'kg'}`;
+}
+
+/* ---- Números tolerantes ---- */
+function clampInt(v, min, max, fallback){
+  const n = parseInt(v, 10);
+  if(!isFinite(n)) return fallback;
+  return Math.min(max, Math.max(min, n));
+}
+function parseNum(v){
+  if(v === null || v === undefined || String(v).trim() === '') return null;
+  const n = Number(String(v).trim().replace(',', '.'));
+  return isFinite(n) ? n : null;
+}
+/* '8-10', '8 – 10' u 8 → '8–10' (guion largo, como el resto de la app) */
+function normValue(v){
+  return String(v == null ? '' : v).trim().replace(/\s*[-–—]\s*/, '–');
+}
+/* Devuelve '' si el valor sirve, o el mensaje de error */
+function checkValue(v){
+  const s = normValue(v);
+  if(!s) return 'Indica cuántas repeticiones o segundos.';
+  const m = s.match(/^(\d+(?:\.\d+)?)(?:–(\d+(?:\.\d+)?))?$/);
+  if(!m) return 'Usa un número (40) o un rango (8–10).';
+  if(m[2] && Number(m[2]) < Number(m[1])) return 'El rango va de menor a mayor.';
+  return '';
+}
+
+/* ---- YouTube ---- */
+const YT_ID = /^[A-Za-z0-9_-]{11}$/;
+/* Acepta youtube.com/watch?v=, youtu.be/, /shorts/, /embed/, /live/ y el id pelado.
+   Devuelve {id, error}: id vacío + error vacío = "no hay link", y eso es válido. */
+function parseYouTube(input){
+  const s = String(input == null ? '' : input).trim();
+  if(!s) return {id:'', error:''};
+  if(YT_ID.test(s)) return {id:s, error:''};
+  let u;
+  try{ u = new URL(/^https?:\/\//i.test(s) ? s : 'https://' + s); }
+  catch(e){ return {id:'', error:'Eso no parece un link de YouTube.'}; }
+  const host = u.hostname.replace(/^www\./, '').toLowerCase();
+  let id = '';
+  if(host === 'youtu.be'){
+    id = u.pathname.split('/').filter(Boolean)[0] || '';
+  } else if(host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com' || host === 'youtube-nocookie.com'){
+    if(u.pathname === '/watch'){
+      id = u.searchParams.get('v') || '';
+    } else {
+      const m = u.pathname.match(/^\/(?:shorts|embed|live|v)\/([^/?#]+)/);
+      id = m ? m[1] : '';
+    }
+  } else {
+    return {id:'', error:'El link tiene que ser de youtube.com o youtu.be.'};
+  }
+  if(!YT_ID.test(id)) return {id:'', error:'No pude extraer el id del video de ese link.'};
+  return {id, error:''};
+}
+
 
 /* ============ STATE + PERSISTENCIA ============ */
-const STORE_KEY = 'rutina-tkd:v2';
+const SCHEMA_VERSION = 1;
+const STORE_KEY = 'rutina-tkd:v2';        // progreso del día (se reinicia al cambiar de día)
+const DATA_KEY  = 'rutina-tkd:data:v1';   // inventario + rutinas (permanentes)
+
+/* Inventario y rutinas. loadData() lo llena antes del primer render. */
+const data = { schemaVersion: SCHEMA_VERSION, seq: 0, inventory: [], routines: {} };
 
 const state = {
+  view: 'day',            // 'day' | 'inv'
   currentDay: 1,
+  editRoutine: false,     // modo edición de la rutina del día
+  invEdit: null,          // id del ejercicio en edición, 'new', o null
+  invSearch: '',
+  formDraft: null,        // valores del formulario abierto, para sobrevivir re-renders
   completed: {1:new Set(),2:new Set(),3:new Set(),4:new Set()},
   session: {phase:'idle', accumulated:0, startedAt:null},
   rounds: {1:0,2:0,3:0,4:0},
@@ -557,40 +837,66 @@ const state = {
           beepFired:false, scheduled:[], label:''},
 };
 
+/* ---- localStorage a prueba de modo privado / sin cuota ----
+   Si no está disponible, la app sigue funcionando en memoria y se muestra
+   el aviso de arriba una sola vez. */
+let storageOk = true;
+function storageAvailable(){
+  try{
+    localStorage.setItem('rutina-tkd:probe', '1');
+    localStorage.removeItem('rutina-tkd:probe');
+    return true;
+  }catch(e){ return false; }
+}
+function lsRead(key){
+  try{ return localStorage.getItem(key); }
+  catch(e){ storageOk = false; showStorageWarning(); return null; }
+}
+function lsWrite(key, value){
+  try{ localStorage.setItem(key, value); return true; }
+  catch(e){ storageOk = false; showStorageWarning(); return false; }
+}
+function showStorageWarning(){
+  const el = document.getElementById('storageWarn');
+  if(el) el.hidden = false;
+}
+
+/* ---- Progreso del día ---- */
 function saveState(){
   try{
-    localStorage.setItem(STORE_KEY, JSON.stringify({
+    lsWrite(STORE_KEY, JSON.stringify({
       date: todayKey(),
       currentDay: state.currentDay,
+      view: state.view,
       completed: Object.fromEntries(Object.entries(state.completed).map(([k,v])=>[k,[...v]])),
       rounds: state.rounds,
       session: state.session,
     }));
-  }catch(e){ /* modo privado / sin cuota: la app sigue funcionando en memoria */ }
+  }catch(e){ /* nada que guardar es peor que romper la app */ }
 }
 
 function loadState(){
-  let raw = null;
-  try{ raw = localStorage.getItem(STORE_KEY); }catch(e){}
+  const raw = lsRead(STORE_KEY);
   const suggestedDay = WEEKDAY_TO_DAY[new Date().getDay()] || 1;
 
   if(!raw){ state.currentDay = suggestedDay; return; }
-  let data;
-  try{ data = JSON.parse(raw); }catch(e){ state.currentDay = suggestedDay; return; }
+  let data0;
+  try{ data0 = JSON.parse(raw); }catch(e){ state.currentDay = suggestedDay; return; }
 
   // Día distinto → arrancamos limpio y saltamos al día de hoy
-  if(data.date !== todayKey()){
+  if(!data0 || data0.date !== todayKey()){
     state.currentDay = suggestedDay;
     saveState();
     return;
   }
-  state.currentDay = DAYS.some(d=>d.id===data.currentDay) ? data.currentDay : suggestedDay;
+  state.currentDay = DAYS.some(d=>d.id===data0.currentDay) ? data0.currentDay : suggestedDay;
+  state.view = data0.view === 'inv' ? 'inv' : 'day';
   for(const k of [1,2,3,4]){
-    state.completed[k] = new Set((data.completed && data.completed[k]) || []);
-    state.rounds[k] = (data.rounds && data.rounds[k]) || 0;
+    state.completed[k] = new Set((data0.completed && data0.completed[k]) || []);
+    state.rounds[k] = (data0.rounds && data0.rounds[k]) || 0;
   }
-  if(data.session && typeof data.session.accumulated === 'number'){
-    state.session = data.session;
+  if(data0.session && typeof data0.session.accumulated === 'number'){
+    state.session = data0.session;
     // si quedó corriendo, sigue contando desde el timestamp guardado
     if(state.session.phase === 'running' && !state.session.startedAt) state.session.phase = 'paused';
   }
@@ -606,30 +912,182 @@ function resetToday(){
   announce('Progreso del día reiniciado');
 }
 
+/* ---- Inventario + rutinas ---- */
+function saveData(){
+  try{
+    lsWrite(DATA_KEY, JSON.stringify({
+      schemaVersion: SCHEMA_VERSION,
+      seq: data.seq,
+      inventory: data.inventory,
+      routines: data.routines,
+    }));
+  }catch(e){ /* igual que arriba: seguimos en memoria */ }
+}
+
+function seedData(){
+  data.schemaVersion = SCHEMA_VERSION;
+  data.inventory = SEED_INVENTORY.map(it=>Object.assign({}, it));
+  data.routines = {};
+  for(const d of DAYS){
+    data.routines[d.id] = (SEED_ROUTINES[d.id] || []).map(b=>({title:b.title, ids:b.ids.slice()}));
+  }
+  data.seq = data.inventory.length;
+  saveData();
+}
+
+function loadData(){
+  const raw = lsRead(DATA_KEY);
+  if(raw){
+    let parsed = null;
+    try{ parsed = JSON.parse(raw); }catch(e){ parsed = null; }
+    const clean = parsed ? sanitizeData(parsed) : null;
+    if(clean){
+      data.schemaVersion = SCHEMA_VERSION;
+      data.seq = clean.seq;
+      data.inventory = clean.inventory;
+      data.routines = clean.routines;
+      return;
+    }
+  }
+  seedData();   // primera carga, o datos ilegibles
+}
+
+/* Valida y normaliza un paquete de datos, venga de localStorage o de un archivo
+   importado. Devuelve el paquete limpio, o null si no sirve. Es la única puerta
+   de entrada de datos externos a la app. */
+function sanitizeData(raw){
+  if(!raw || typeof raw !== 'object') return null;
+  const ver = Number(raw.schemaVersion);
+  if(!isFinite(ver) || ver < 1 || ver > SCHEMA_VERSION) return null;
+  if(!Array.isArray(raw.inventory) || !raw.routines || typeof raw.routines !== 'object') return null;
+
+  const inventory = [];
+  const seenId = new Set(), seenName = new Set();
+  for(const it of raw.inventory){
+    const clean = sanitizeItem(it, seenId, seenName);
+    if(clean){
+      inventory.push(clean);
+      seenId.add(clean.id);
+      seenName.add(normName(clean.name));
+    }
+  }
+  if(!inventory.length) return null;
+
+  const routines = {};
+  for(const d of DAYS){
+    const src = Array.isArray(raw.routines[d.id]) ? raw.routines[d.id] : [];
+    const blocks = [];
+    for(const b of src){
+      if(!b || typeof b !== 'object') continue;
+      const ids = [];
+      for(const rawId of (Array.isArray(b.ids) ? b.ids : [])){
+        const id = String(rawId);
+        // un ejercicio no puede repetirse en el mismo día (ni entre bloques):
+        // el progreso y los ids del DOM van por ejercicio
+        if(seenId.has(id) && !ids.includes(id) && !blocks.some(x=>x.ids.includes(id))) ids.push(id);
+      }
+      blocks.push({title: String(b.title == null ? '' : b.title).trim().slice(0,60) || 'Ejercicios', ids});
+    }
+    routines[d.id] = blocks.length ? blocks : (SEED_ROUTINES[d.id] || []).map(b=>({title:b.title, ids:[]}));
+  }
+
+  let seq = clampInt(raw.seq, 0, 1e9, 0);
+  for(const it of inventory){
+    const m = /^ex-(\d+)$/.exec(it.id);
+    if(m) seq = Math.max(seq, parseInt(m[1], 10));
+  }
+  return {schemaVersion: SCHEMA_VERSION, seq, inventory, routines};
+}
+
+function sanitizeItem(raw, seenId, seenName){
+  if(!raw || typeof raw !== 'object') return null;
+  const name = String(raw.name == null ? '' : raw.name).trim().slice(0,90);
+  if(!name || seenName.has(normName(name))) return null;
+  const id = String(raw.id == null ? '' : raw.id).trim().replace(/[^A-Za-z0-9_:-]/g,'').slice(0,40);
+  if(!id || seenId.has(id)) return null;
+  const value = normValue(raw.value);
+  if(checkValue(value)) return null;
+  const weight = parseNum(raw.weight);
+  return {
+    id,
+    name,
+    measure: raw.measure === 'time' ? 'time' : 'reps',
+    sets: clampInt(raw.sets, 1, 99, 1),
+    value,
+    suffix: String(raw.suffix == null ? '' : raw.suffix).trim().slice(0,24),
+    weight: (weight === null || weight < 0) ? null : weight,
+    unit: raw.unit === 'lb' ? 'lb' : 'kg',
+    rest: clampInt(raw.rest, 0, 3600, 60),
+    note: String(raw.note == null ? '' : raw.note).trim().slice(0,400),
+    yt: parseYouTube(raw.yt).id,
+  };
+}
+
+/* Ids estables: nunca se reutilizan, ni al borrar ni al renombrar */
+function nextExId(){
+  do { data.seq++; } while(data.inventory.some(it=>it.id === 'ex-' + data.seq));
+  return 'ex-' + data.seq;
+}
+
+function restoreSeed(){
+  seedData();
+  state.editRoutine = false;
+  state.invEdit = null;
+  state.formDraft = null;
+  state.invSearch = '';
+  for(const k of [1,2,3,4]) state.completed[k].clear();
+  saveState();
+  renderAll();
+  announce('Inventario y rutinas restaurados a los valores originales');
+}
+
+
 /* ============ MINIATURA DE VIDEO ============ */
+/* Sin link de video → placeholder del mismo tamaño, así la tarjeta no cambia
+   de forma y la lista no se desalinea. */
 function videoThumb(yt, title){
+  if(!yt){
+    return `<div class="vid-thumb empty" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M4 9h2v6H4zM7 7h2v10H7zM10 11h4v2h-4zM15 7h2v10h-2zM18 9h2v6h-2z"/></svg>
+    </div>`;
+  }
   return `<button type="button" class="vid-thumb" data-yt="${esc(yt)}" data-title="${esc(title)}"
       aria-label="Ver técnica: ${esc(title)}">
-      <img src="https://i.ytimg.com/vi/${esc(yt)}/mqdefault.jpg" alt="" loading="lazy" decoding="async" width="320" height="180">
+      <img src="https://i.ytimg.com/vi/${esc(yt)}/mqdefault.jpg" alt="" loading="lazy" decoding="async" width="320" height="180" onerror="this.remove()">
       <span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
     </button>`;
 }
 
+
 /* ============ RENDER TABS ============ */
+/* Las pestañas son los 4 días + el inventario. La clave de cada pestaña es el
+   id del día como texto, o 'inv'. */
+const INV_TAB = 'inv';
+function tabKeys(){ return DAYS.map(d=>String(d.id)).concat([INV_TAB]); }
+function activeTabKey(){ return state.view === 'inv' ? INV_TAB : String(state.currentDay); }
+
 function renderTabs(){
   const el = document.getElementById('tabs');
-  el.innerHTML = DAYS.map(d=>`
-    <button type="button" role="tab" id="tab-${d.id}" class="tab"
-      aria-selected="${d.id===state.currentDay}" tabindex="${d.id===state.currentDay?0:-1}"
-      aria-controls="main" data-day="${d.id}">
-      <b>${esc(d.short)}</b>${esc(d.label)}
+  const active = activeTabKey();
+  /* La pestaña de inventario va compacta y sin segunda línea: con cinco pestañas,
+     «Inventario» completo no entra en una pantalla de 360px. El nombre largo se
+     mantiene para lectores de pantalla con aria-label. */
+  const tabs = DAYS.map(d=>({key:String(d.id), short:d.short, label:d.label, name:'', cls:''}))
+    .concat([{key:INV_TAB, short:'INV', label:'', name:'Inventario', cls:' tab-inv'}]);
+
+  el.innerHTML = tabs.map(t=>`
+    <button type="button" role="tab" id="tab-${esc(t.key)}" class="tab${t.cls}"
+      aria-selected="${t.key===active}" tabindex="${t.key===active?0:-1}"
+      ${t.name ? `aria-label="${esc(t.name)}"` : ''}
+      aria-controls="main" data-tab="${esc(t.key)}">
+      <b>${esc(t.short)}</b>${esc(t.label)}
     </button>`).join('');
 
   el.querySelectorAll('.tab').forEach(t=>{
-    t.addEventListener('click', ()=> selectDay(parseInt(t.dataset.day,10)));
+    t.addEventListener('click', ()=> selectTab(t.dataset.tab));
     t.addEventListener('keydown', e=>{
-      const order = DAYS.map(d=>d.id);
-      const i = order.indexOf(parseInt(t.dataset.day,10));
+      const order = tabKeys();
+      const i = order.indexOf(t.dataset.tab);
       let next = null;
       if(e.key === 'ArrowRight') next = order[(i+1) % order.length];
       else if(e.key === 'ArrowLeft') next = order[(i-1+order.length) % order.length];
@@ -637,41 +1095,60 @@ function renderTabs(){
       else if(e.key === 'End') next = order[order.length-1];
       if(next !== null){
         e.preventDefault();
-        selectDay(next);
-        document.getElementById('tab-'+next).focus();
+        selectTab(next);
+        const btn = document.getElementById('tab-'+next);
+        if(btn) btn.focus();
       }
     });
   });
-  document.getElementById('main').setAttribute('aria-labelledby', 'tab-'+state.currentDay);
+  document.getElementById('main').setAttribute('aria-labelledby', 'tab-'+active);
 }
 
-function selectDay(id){
-  if(state.currentDay === id) return;
-  state.currentDay = id;
+function selectTab(key){
+  // si dejas el inventario con un formulario abierto, no pierdes lo tecleado
+  if(state.view === 'inv' && state.invEdit) state.formDraft = readForm();
+  if(key === INV_TAB){
+    if(state.view === 'inv') return;
+    state.view = 'inv';
+  } else {
+    const id = parseInt(key, 10);
+    if(state.view === 'day' && state.currentDay === id) return;
+    state.view = 'day';
+    if(state.currentDay !== id){
+      state.currentDay = id;
+      state.editRoutine = false;   // el modo edición no se arrastra entre días
+    }
+  }
   saveState();
   renderAll();
 }
 
+
 /* ============ RENDER TARJETA DE EJERCICIO ============ */
-function exCard(ex){
-  const isDone = state.completed[state.currentDay].has(ex.id);
+/* `it` es un ejercicio del inventario: la tarjeta lee series, valor, peso,
+   descanso, nota y video de ahí, nunca de una copia por día. */
+function exCard(it){
+  const isDone = state.completed[state.currentDay].has(it.id);
+  const w = weightLabel(it);
   return `
-  <div class="card ${isDone?'done':''}" data-id="${esc(ex.id)}">
-    ${videoThumb(ex.yt, ex.name)}
+  <div class="card ${isDone?'done':''}" data-id="${esc(it.id)}">
+    ${videoThumb(it.yt, it.name)}
     <div class="card-body">
       <div class="card-top">
-        <div class="ex-name">${esc(ex.name)}</div>
-        <button type="button" class="chk" data-check="${esc(ex.id)}" aria-pressed="${isDone}"
-          aria-label="Marcar «${esc(ex.name)}» como completado">✓</button>
+        <div class="ex-name">${esc(it.name)}</div>
+        <button type="button" class="chk" data-check="${esc(it.id)}" aria-pressed="${isDone}"
+          aria-label="Marcar «${esc(it.name)}» como completado">✓</button>
       </div>
       <div class="meta-row">
-        <span class="chip">${esc(ex.sets)}</span>
-        <button type="button" class="rest-btn" data-rest="${esc(ex.id)}" data-sec="${ex.rest}">⏱ Descanso ${ex.rest}s</button>
+        <span class="chip">${esc(setsLabel(it))}</span>
+        ${w ? `<span class="chip">${esc(w)}</span>` : ''}
+        ${it.rest > 0 ? `<button type="button" class="rest-btn" data-rest="${esc(it.id)}" data-sec="${it.rest}">⏱ Descanso ${it.rest}s</button>` : ''}
       </div>
-      ${ex.note ? `<div class="note">${esc(ex.note)}</div>` : ''}
+      ${it.note ? `<div class="note">${esc(it.note)}</div>` : ''}
     </div>
   </div>`;
 }
+
 
 function cardioItemRow(it){
   const timer = it.sec
@@ -714,19 +1191,34 @@ function cardioCard(day){
 function renderDay(){
   const day = dayById(state.currentDay);
   const main = document.getElementById('main');
+  const editing = state.editRoutine;
+
   let html = `<div class="day-head">
     <h2>${esc(day.title)}</h2>
     <div class="focus">${esc(day.focus)}</div>
     ${day.sub ? `<div class="sub">${esc(day.sub)}</div>` : ''}
+    <div class="day-actions">
+      <button type="button" class="ghost-btn small" id="editRoutineBtn" aria-pressed="${editing}">${editing ? '✓ Listo' : '✎ Editar rutina'}</button>
+      ${editing ? `<span class="edit-hint">Agrega, quita y reordena. Se guarda al instante.</span>` : ''}
+    </div>
   </div>`;
 
   if(day.warmup){
     html += `<div class="warmup-card"><b>${esc(day.warmup.title)}</b> · ${esc(day.warmup.duration)}<br>${esc(day.warmup.detail)}</div>`;
   }
-  for(const block of (day.blocks||[])){
+
+  const blocks = dayBlocks(day.id);
+  blocks.forEach((block, bi)=>{
     html += `<div class="block-title">${esc(block.title)}</div>`;
-    html += block.exercises.map(exCard).join('');
-  }
+    if(editing){
+      html += editBlock(block, bi);
+    } else if(block.items.length){
+      html += block.items.map(exCard).join('');
+    } else {
+      html += `<div class="empty-note">Sin ejercicios en este bloque. Toca «Editar rutina» para agregar.</div>`;
+    }
+  });
+
   if(day.cardio){
     html += cardioCard(day);
   }
@@ -736,6 +1228,84 @@ function renderDay(){
 
   main.innerHTML = html;
   wireDayEvents(day);
+}
+
+/* Modo edición: filas compactas con subir / bajar / quitar.
+   No llevan check ni cronómetro para no marcar nada por accidente. */
+function editBlock(block, bi){
+  const rows = block.items.map((it, i)=>{
+    const w = weightLabel(it);
+    return `
+    <div class="edit-item">
+      <div class="ei-body">
+        <div class="ei-name">${esc(it.name)}</div>
+        <div class="ei-meta mono">${esc(setsLabel(it))} · ${it.rest}s${w ? ' · ' + esc(w) : ''}</div>
+      </div>
+      <div class="ei-actions">
+        <button type="button" class="sq-btn" data-move="up" data-b="${bi}" data-i="${i}"
+          aria-label="Subir ${esc(it.name)}">↑</button>
+        <button type="button" class="sq-btn" data-move="down" data-b="${bi}" data-i="${i}"
+          aria-label="Bajar ${esc(it.name)}">↓</button>
+        <button type="button" class="sq-btn danger" data-drop="${esc(it.id)}" data-b="${bi}"
+          aria-label="Quitar ${esc(it.name)} de la rutina">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="edit-list">${rows}
+    <button type="button" class="add-btn" data-addto="${bi}">+ Agregar ejercicio</button>
+  </div>`;
+}
+
+/* ---- Edición de la rutina ---- */
+/* Mueve dentro del bloque; en los extremos pasa al bloque vecino
+   (así puedes llevar un ejercicio de Fuerza a Abdominales sin sacarlo). */
+function moveInRoutine(dayId, bi, i, dir){
+  const blocks = data.routines[dayId];
+  if(!blocks || !blocks[bi]) return;
+  const ids = blocks[bi].ids;
+  const j = i + dir;
+  let nb = bi, ni = j;
+
+  if(j >= 0 && j < ids.length){
+    const tmp = ids[i]; ids[i] = ids[j]; ids[j] = tmp;
+  } else {
+    nb = bi + dir;
+    if(nb < 0 || nb >= blocks.length) return;
+    const moved = ids.splice(i, 1)[0];
+    if(dir < 0){ blocks[nb].ids.push(moved); ni = blocks[nb].ids.length - 1; }
+    else { blocks[nb].ids.unshift(moved); ni = 0; }
+  }
+  saveData();
+  renderDay();
+  updateBelt();
+  const back = document.querySelector(`[data-move="${dir<0?'up':'down'}"][data-b="${nb}"][data-i="${ni}"]`);
+  if(back) back.focus();
+}
+
+function dropFromRoutine(dayId, bi, exId){
+  const blocks = data.routines[dayId];
+  if(!blocks || !blocks[bi]) return;
+  blocks[bi].ids = blocks[bi].ids.filter(id=>id !== exId);
+  state.completed[dayId].delete(exId);
+  saveData();
+  saveState();
+  renderDay();
+  updateBelt();
+  announce('Ejercicio quitado de la rutina');
+}
+
+function addToRoutine(dayId, bi, exId){
+  const blocks = data.routines[dayId];
+  if(!blocks || !blocks[bi]) return;
+  if(blocks.some(b=>b.ids.includes(exId))) return;   // nunca dos veces el mismo día
+  blocks[bi].ids.push(exId);
+  saveData();
+  renderDay();
+  updateBelt();
+  const it = invById(exId);
+  announce((it ? it.name : 'Ejercicio') + ' agregado a la rutina');
+  const back = document.querySelector(`[data-addto="${bi}"]`);
+  if(back) back.focus();
 }
 
 function wireDayEvents(day){
@@ -778,7 +1348,32 @@ function wireDayEvents(day){
       state.rounds[dayId] = Math.max(0, state.rounds[dayId]-1); paint(); saveState();
     });
   }
+
+  /* --- modo edición --- */
+  const editBtn = document.getElementById('editRoutineBtn');
+  if(editBtn){
+    editBtn.addEventListener('click', ()=>{
+      state.editRoutine = !state.editRoutine;
+      renderDay();
+      const again = document.getElementById('editRoutineBtn');
+      if(again) again.focus();
+      announce(state.editRoutine ? 'Modo edición de la rutina' : 'Modo edición cerrado');
+    });
+  }
+  document.querySelectorAll('[data-move]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      moveInRoutine(day.id, parseInt(btn.dataset.b,10), parseInt(btn.dataset.i,10),
+        btn.dataset.move === 'up' ? -1 : 1);
+    });
+  });
+  document.querySelectorAll('[data-drop]').forEach(btn=>{
+    btn.addEventListener('click', ()=> dropFromRoutine(day.id, parseInt(btn.dataset.b,10), btn.dataset.drop));
+  });
+  document.querySelectorAll('[data-addto]').forEach(btn=>{
+    btn.addEventListener('click', ()=> openPicker(day.id, parseInt(btn.dataset.addto,10), btn));
+  });
 }
+
 
 /* Marca/desmarca sin re-renderizar el día entero (evita el parpadeo) */
 function toggleDone(id){
@@ -1124,9 +1719,10 @@ document.addEventListener('keydown', e=>{
     else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
   }
 });
-/* Toque en el fondo cierra info y video. En el cronómetro NO: un toque
-   accidental no debe cancelar un descanso en curso (solo ✕ o Escape). */
-['infoModal','videoModal'].forEach(id=>{
+/* Toque en el fondo cierra info, video y el selector de ejercicios. En el cronómetro
+   NO: un toque accidental no debe cancelar un descanso en curso (solo ✕ o Escape).
+   Tampoco en «Importar»: ahí se perdería el JSON pegado. */
+['infoModal','videoModal','pickerModal'].forEach(id=>{
   document.getElementById(id).addEventListener('click', e=>{
     if(e.target.id === id) closeTopDialog();
   });
@@ -1149,10 +1745,477 @@ function closeVideo(){
   closeDialog(document.getElementById('videoModal'));
 }
 
+/* ============ VISTA INVENTARIO ============ */
+function renderInventory(){
+  const main = document.getElementById('main');
+  main.innerHTML = `
+  <div class="day-head">
+    <h2>Inventario</h2>
+    <div class="focus">Fuente única de los 4 días · <span id="invCount">${data.inventory.length}</span> ejercicios</div>
+  </div>
+  <div class="inv-toolbar">
+    <input type="search" class="inp" id="invSearch" placeholder="Buscar ejercicio…"
+      aria-label="Buscar ejercicio en el inventario" value="${esc(state.invSearch)}" autocomplete="off">
+    <button type="button" class="add-btn" id="invNewBtn">+ Nuevo ejercicio</button>
+  </div>
+  <div id="invList"></div>
+  <div class="block-title">Datos</div>
+  <div class="data-box">
+    <p class="note">Tu inventario y tus rutinas se guardan en este dispositivo. Exporta un respaldo antes de cambiar de teléfono o de limpiar el navegador.</p>
+    <div class="data-actions">
+      <button type="button" class="ghost-btn" id="exportBtn">⬇ Exportar JSON</button>
+      <button type="button" class="ghost-btn" id="importBtn">⬆ Importar JSON</button>
+      <button type="button" class="ghost-btn danger" id="restoreBtn">↺ Restaurar valores originales</button>
+    </div>
+  </div>`;
+
+  renderInvList();
+
+  const search = document.getElementById('invSearch');
+  search.addEventListener('input', ()=>{
+    // si hay un formulario abierto, guardamos lo tecleado antes de re-renderizar
+    if(state.invEdit) state.formDraft = readForm();
+    state.invSearch = search.value;
+    renderInvList();
+  });
+  document.getElementById('invNewBtn').addEventListener('click', ()=>{
+    state.invEdit = 'new';
+    state.formDraft = null;
+    renderInvList();
+    focusForm();
+  });
+  document.getElementById('exportBtn').addEventListener('click', exportJson);
+  document.getElementById('importBtn').addEventListener('click', e=> openImport(e.currentTarget));
+  document.getElementById('restoreBtn').addEventListener('click', ()=>{
+    if(confirm('¿Restaurar el inventario y las rutinas originales?\n\nSe pierden los ejercicios que creaste, los cambios que hiciste y los checks de hoy.')){
+      restoreSeed();
+    }
+  });
+}
+
+function renderInvList(){
+  const list = document.getElementById('invList');
+  if(!list) return;
+  const q = normName(state.invSearch);
+  const items = data.inventory.filter(it=> !q || normName(it.name).includes(q));
+
+  let html = state.invEdit === 'new' ? invForm(null) : '';
+  for(const it of items){
+    html += (state.invEdit === it.id) ? invForm(it) : invCard(it);
+  }
+  // el formulario abierto sigue visible aunque la búsqueda ya no lo incluya
+  if(state.invEdit && state.invEdit !== 'new' && !items.some(it=>it.id === state.invEdit)){
+    const it = invById(state.invEdit);
+    if(it) html = invForm(it) + html;
+    else state.invEdit = null;
+  }
+  if(!items.length && state.invEdit !== 'new'){
+    html += `<div class="empty-note">Sin resultados${state.invSearch ? ` para «${esc(state.invSearch)}»` : ''}.</div>`;
+  }
+  list.innerHTML = html;
+  wireInvList();
+
+  const count = document.getElementById('invCount');
+  if(count) count.textContent = data.inventory.length;
+}
+
+function invCard(it){
+  const used = daysUsing(it.id);
+  const usedTxt = used.length
+    ? 'En ' + used.map(id=>dayById(id).short).join(' · ')
+    : 'Sin usar en ninguna rutina';
+  const w = weightLabel(it);
+  return `
+  <div class="inv-card" data-inv="${esc(it.id)}">
+    ${videoThumb(it.yt, it.name)}
+    <div class="card-body">
+      <div class="ic-name">${esc(it.name)}</div>
+      <div class="meta-row">
+        <span class="chip">${esc(setsLabel(it))}</span>
+        ${w ? `<span class="chip">${esc(w)}</span>` : ''}
+        <span class="chip">⏱ ${it.rest}s</span>
+      </div>
+      <div class="ic-used mono">${esc(usedTxt)}</div>
+      ${it.note ? `<div class="note">${esc(it.note)}</div>` : ''}
+    </div>
+    <div class="ic-actions">
+      <button type="button" class="sq-btn" data-edit-inv="${esc(it.id)}"
+        aria-label="Editar ${esc(it.name)}">✎</button>
+      <button type="button" class="sq-btn danger" data-del-inv="${esc(it.id)}"
+        aria-label="Eliminar ${esc(it.name)} del inventario">🗑</button>
+    </div>
+  </div>`;
+}
+
+/* ---- Formulario de crear / editar ---- */
+function blankItem(){
+  return {id:'', name:'', measure:'reps', sets:3, value:'', suffix:'', weight:'', unit:'kg', rest:60, note:'', yt:''};
+}
+/* Valores a pintar: el borrador si hay uno (re-render con datos a medio escribir),
+   si no los del ejercicio, si no los de uno nuevo. */
+function draftOf(it){
+  if(state.formDraft) return state.formDraft;
+  if(!it) return blankItem();
+  return {
+    id: it.id, name: it.name, measure: it.measure, sets: it.sets, value: it.value,
+    suffix: it.suffix, weight: it.weight === null ? '' : it.weight, unit: it.unit,
+    rest: it.rest, note: it.note,
+    yt: it.yt ? 'https://youtu.be/' + it.yt : '',
+  };
+}
+function fld(form, name){ return form.querySelector(`[name="${name}"]`); }
+
+function invForm(it){
+  const d = draftOf(it);
+  const isTime = d.measure === 'time';
+  return `
+  <form class="ex-form" id="exForm" novalidate data-editing="${it ? esc(it.id) : ''}">
+    <h3 class="form-title">${it ? 'Editar ejercicio' : 'Nuevo ejercicio'}</h3>
+    <label class="f">Nombre
+      <input class="inp" type="text" name="name" value="${esc(d.name)}" maxlength="90" autocomplete="off">
+    </label>
+    <p class="f-err" data-err="name" role="alert" hidden></p>
+    <div class="f-row">
+      <label class="f">Medida
+        <select class="inp" name="measure">
+          <option value="reps" ${isTime ? '' : 'selected'}>Repeticiones</option>
+          <option value="time" ${isTime ? 'selected' : ''}>Tiempo</option>
+        </select>
+      </label>
+      <label class="f">Series
+        <input class="inp" type="number" name="sets" inputmode="numeric" min="1" max="99" value="${esc(d.sets)}">
+      </label>
+    </div>
+    <p class="f-err" data-err="sets" role="alert" hidden></p>
+    <div class="f-row">
+      <label class="f"><span id="valueLabel">${isTime ? 'Segundos' : 'Repeticiones'}</span>
+        <input class="inp" type="text" name="value" inputmode="numeric"
+          placeholder="${isTime ? '40 o 40–60' : '8–10'}" value="${esc(d.value)}">
+      </label>
+      <label class="f">Detalle
+        <input class="inp" type="text" name="suffix" maxlength="24" placeholder="por lado" value="${esc(d.suffix)}">
+      </label>
+    </div>
+    <p class="f-err" data-err="value" role="alert" hidden></p>
+    <div class="f-row">
+      <label class="f">Peso
+        <input class="inp" type="number" name="weight" inputmode="decimal" min="0" step="0.5"
+          placeholder="corporal" value="${esc(d.weight)}">
+      </label>
+      <label class="f">Unidad
+        <select class="inp" name="unit">
+          <option value="kg" ${d.unit === 'lb' ? '' : 'selected'}>kg</option>
+          <option value="lb" ${d.unit === 'lb' ? 'selected' : ''}>lb</option>
+        </select>
+      </label>
+      <label class="f">Descanso
+        <input class="inp" type="number" name="rest" inputmode="numeric" min="0" max="3600" value="${esc(d.rest)}">
+      </label>
+    </div>
+    <p class="f-err" data-err="weight" role="alert" hidden></p>
+    <p class="f-err" data-err="rest" role="alert" hidden></p>
+    <label class="f">Nota (opcional)
+      <textarea class="inp" name="note" rows="2" maxlength="400">${esc(d.note)}</textarea>
+    </label>
+    <label class="f">Link de YouTube (opcional)
+      <input class="inp" type="url" name="yt" inputmode="url" autocomplete="off"
+        placeholder="https://youtu.be/…" value="${esc(d.yt)}">
+    </label>
+    <p class="f-err" data-err="yt" role="alert" hidden></p>
+    <div class="yt-preview" id="ytPreview"></div>
+    <div class="f-actions">
+      <button type="submit" class="primary-btn">Guardar</button>
+      <button type="button" class="ghost-btn" data-cancel-form>Cancelar</button>
+    </div>
+  </form>`;
+}
+
+function readForm(){
+  const f = document.getElementById('exForm');
+  if(!f) return state.formDraft;
+  const g = n => { const el = fld(f, n); return el ? el.value : ''; };
+  return {
+    id: f.dataset.editing || '',
+    name: g('name'), measure: g('measure'), sets: g('sets'), value: g('value'),
+    suffix: g('suffix'), weight: g('weight'), unit: g('unit'), rest: g('rest'),
+    note: g('note'), yt: g('yt'),
+  };
+}
+
+function showFormErrors(errs){
+  const f = document.getElementById('exForm');
+  if(!f) return;
+  f.querySelectorAll('[data-err]').forEach(p=>{
+    const msg = errs[p.dataset.err] || '';
+    p.textContent = msg;
+    p.hidden = !msg;
+    const field = fld(f, p.dataset.err);
+    if(field) field.classList.toggle('bad', !!msg);
+  });
+  const first = Object.keys(errs)[0];
+  const el = first ? fld(f, first) : null;
+  if(el) el.focus();
+}
+
+function submitForm(){
+  const d = readForm();
+  if(!d) return;
+  const editingId = d.id || null;
+  const errs = {};
+
+  const name = String(d.name).trim();
+  if(!name){
+    errs.name = 'El nombre es obligatorio.';
+  } else if(data.inventory.some(it=>normName(it.name) === normName(name) && it.id !== editingId)){
+    errs.name = 'Ya hay un ejercicio con ese nombre.';
+  }
+  const sets = parseNum(d.sets);
+  if(sets === null || !Number.isInteger(sets) || sets < 1) errs.sets = 'Las series son un número entero de 1 o más.';
+  const vErr = checkValue(d.value);
+  if(vErr) errs.value = vErr;
+  const weight = parseNum(d.weight);
+  if(String(d.weight).trim() !== '' && (weight === null || weight < 0)){
+    errs.weight = 'El peso no puede ser negativo. Déjalo vacío si es con tu propio peso.';
+  }
+  const rest = parseNum(d.rest);
+  if(rest === null || !Number.isInteger(rest) || rest < 0) errs.rest = 'El descanso es 0 o más segundos.';
+  const yt = parseYouTube(d.yt);
+  if(yt.error) errs.yt = yt.error;
+
+  if(Object.keys(errs).length){
+    state.formDraft = d;
+    showFormErrors(errs);
+    return;
+  }
+
+  const clean = {
+    id: editingId || nextExId(),
+    name,
+    measure: d.measure === 'time' ? 'time' : 'reps',
+    sets: Math.round(sets),
+    value: normValue(d.value),
+    suffix: String(d.suffix).trim().slice(0,24),
+    weight: String(d.weight).trim() === '' ? null : weight,
+    unit: d.unit === 'lb' ? 'lb' : 'kg',
+    rest: Math.round(rest),
+    note: String(d.note).trim().slice(0,400),
+    yt: yt.id,
+  };
+
+  const i = editingId ? data.inventory.findIndex(x=>x.id === editingId) : -1;
+  if(i >= 0) data.inventory[i] = clean;
+  else data.inventory.push(clean);
+
+  state.invEdit = null;
+  state.formDraft = null;
+  saveData();
+  renderInvList();
+  updateBelt();
+  announce(editingId ? `«${clean.name}» actualizado` : `«${clean.name}» agregado al inventario`);
+}
+
+function deleteItem(id){
+  const it = invById(id);
+  if(!it) return;
+  const used = daysUsing(id);
+  const msg = used.length
+    ? `«${it.name}» está en ${used.map(d=>dayById(d).title).join(', ')}.\n\n¿Eliminarlo del inventario y quitarlo también de esos días?`
+    : `¿Eliminar «${it.name}» del inventario?`;
+  if(!confirm(msg)) return;
+
+  data.inventory = data.inventory.filter(x=>x.id !== id);
+  for(const d of DAYS){
+    (data.routines[d.id] || []).forEach(b=>{ b.ids = b.ids.filter(x=>x !== id); });
+    state.completed[d.id].delete(id);
+  }
+  if(state.invEdit === id){ state.invEdit = null; state.formDraft = null; }
+  saveData();
+  saveState();
+  renderInvList();
+  updateBelt();
+  announce(`«${it.name}» eliminado`);
+}
+
+function wireInvList(){
+  const list = document.getElementById('invList');
+  if(!list) return;
+
+  list.querySelectorAll('[data-yt]').forEach(thumb=>{
+    thumb.addEventListener('click', ()=> openVideo(thumb.dataset.yt, thumb.dataset.title, thumb));
+  });
+  list.querySelectorAll('[data-edit-inv]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.invEdit = btn.dataset.editInv;
+      state.formDraft = null;
+      renderInvList();
+      focusForm();
+    });
+  });
+  list.querySelectorAll('[data-del-inv]').forEach(btn=>{
+    btn.addEventListener('click', ()=> deleteItem(btn.dataset.delInv));
+  });
+
+  const f = document.getElementById('exForm');
+  if(!f) return;
+  f.addEventListener('submit', e=>{ e.preventDefault(); submitForm(); });
+  f.querySelector('[data-cancel-form]').addEventListener('click', ()=>{
+    state.invEdit = null;
+    state.formDraft = null;
+    renderInvList();
+  });
+  fld(f, 'measure').addEventListener('change', ()=>{
+    const isTime = fld(f, 'measure').value === 'time';
+    const lbl = document.getElementById('valueLabel');
+    if(lbl) lbl.textContent = isTime ? 'Segundos' : 'Repeticiones';
+    fld(f, 'value').placeholder = isTime ? '40 o 40–60' : '8–10';
+  });
+  fld(f, 'yt').addEventListener('input', paintYtPreview);
+  paintYtPreview();
+}
+
+/* Miniatura + id extraído en vivo mientras pegas el link */
+function paintYtPreview(){
+  const f = document.getElementById('exForm');
+  const box = document.getElementById('ytPreview');
+  if(!f || !box) return;
+  const res = parseYouTube(fld(f, 'yt').value);
+  const err = f.querySelector('[data-err="yt"]');
+  if(err){ err.textContent = res.error; err.hidden = !res.error; }
+  fld(f, 'yt').classList.toggle('bad', !!res.error);
+  box.innerHTML = res.id
+    ? `<img src="https://i.ytimg.com/vi/${esc(res.id)}/mqdefault.jpg" alt="" width="320" height="180" onerror="this.remove()">
+       <span class="mono">id: ${esc(res.id)}</span>`
+    : '';
+}
+
+function focusForm(){
+  const f = document.getElementById('exForm');
+  if(!f) return;
+  const name = fld(f, 'name');
+  if(name) name.focus();
+  f.scrollIntoView({block:'nearest'});
+}
+
+/* ============ SELECTOR DE EJERCICIOS (modo edición) ============ */
+const picker = {dayId:null, block:0, query:''};
+
+function openPicker(dayId, bi, trigger){
+  picker.dayId = dayId;
+  picker.block = bi;
+  picker.query = '';
+  const input = document.getElementById('pickerSearch');
+  input.value = '';
+  renderPickerList();
+  openDialog(document.getElementById('pickerModal'), input, trigger);
+}
+
+function renderPickerList(){
+  const list = document.getElementById('pickerList');
+  const used = new Set((data.routines[picker.dayId] || []).flatMap(b=>b.ids));
+  const q = normName(picker.query);
+  const items = data.inventory.filter(it=> !used.has(it.id) && (!q || normName(it.name).includes(q)));
+
+  if(!items.length){
+    const todos = data.inventory.every(it=>used.has(it.id));
+    list.innerHTML = `<p class="empty-note">${todos
+      ? 'Ya agregaste todos los ejercicios del inventario a este día.'
+      : 'Sin resultados. Créalo primero en la pestaña Inventario.'}</p>`;
+    return;
+  }
+  list.innerHTML = items.map(it=>`
+    <button type="button" class="picker-item" data-pick="${esc(it.id)}">
+      <span class="pi-name">${esc(it.name)}</span>
+      <span class="pi-meta mono">${esc(setsLabel(it))} · ⏱ ${it.rest}s</span>
+    </button>`).join('');
+
+  list.querySelectorAll('[data-pick]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.dataset.pick;
+      closeDialog(document.getElementById('pickerModal'));
+      addToRoutine(picker.dayId, picker.block, id);
+    });
+  });
+}
+
+/* ============ EXPORTAR / IMPORTAR ============ */
+function dataPackage(){
+  return {
+    schemaVersion: SCHEMA_VERSION,
+    exportedAt: new Date().toISOString(),
+    inventory: data.inventory,
+    routines: data.routines,
+  };
+}
+
+function exportJson(){
+  const txt = JSON.stringify(dataPackage(), null, 2);
+  try{
+    const url = URL.createObjectURL(new Blob([txt], {type:'application/json'}));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `rutina-tkd-${todayKey()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url); }catch(e){} }, 5000);
+    announce('Respaldo exportado');
+  }catch(e){
+    alert('Este navegador no me deja generar el archivo. Abre la app en otro navegador para exportar.');
+  }
+}
+
+function setImportError(msg){
+  const p = document.getElementById('importErr');
+  p.textContent = msg;
+  p.hidden = !msg;
+}
+
+function openImport(trigger){
+  const ta = document.getElementById('importText');
+  ta.value = '';
+  document.getElementById('importFile').value = '';
+  setImportError('');
+  openDialog(document.getElementById('importModal'), ta, trigger);
+}
+
+/* Valida TODO antes de tocar los datos actuales. */
+function applyImport(text){
+  if(!String(text).trim()){ setImportError('Pega el JSON o elige un archivo.'); return; }
+  let parsed = null;
+  try{ parsed = JSON.parse(text); }
+  catch(e){ setImportError('Eso no es JSON válido.'); return; }
+
+  if(parsed && Number(parsed.schemaVersion) > SCHEMA_VERSION){
+    setImportError(`El respaldo es de un esquema más nuevo (v${parsed.schemaVersion}) que esta versión de la app (v${SCHEMA_VERSION}).`);
+    return;
+  }
+  const clean = sanitizeData(parsed);
+  if(!clean){
+    setImportError('El JSON no tiene el formato esperado: necesita schemaVersion, inventory (con al menos un ejercicio válido) y routines.');
+    return;
+  }
+  if(!confirm(`Se importarán ${clean.inventory.length} ejercicios y las rutinas de los 4 días, reemplazando lo que tienes ahora. ¿Continuar?`)) return;
+
+  data.schemaVersion = SCHEMA_VERSION;
+  data.seq = clean.seq;
+  data.inventory = clean.inventory;
+  data.routines = clean.routines;
+  for(const k of [1,2,3,4]) state.completed[k].clear();
+  state.invEdit = null;
+  state.formDraft = null;
+  state.editRoutine = false;
+  saveData();
+  saveState();
+  closeDialog(document.getElementById('importModal'));
+  renderAll();
+  announce('Datos importados');
+}
+
 /* ============ INIT ============ */
 function renderAll(){
   renderTabs();
-  renderDay();
+  if(state.view === 'inv') renderInventory();
+  else renderDay();
   updateBelt();
 }
 
@@ -1176,6 +2239,31 @@ document.getElementById('timerPause').addEventListener('click', ()=>{
 document.getElementById('timerPlus').addEventListener('click', ()=> adjustTimer(15));
 document.getElementById('timerMinus').addEventListener('click', ()=> adjustTimer(-15));
 
+/* Selector de ejercicios e importación */
+document.getElementById('pickerClose').addEventListener('click', ()=> closeDialog(document.getElementById('pickerModal')));
+document.getElementById('pickerSearch').addEventListener('input', e=>{
+  picker.query = e.target.value;
+  renderPickerList();
+});
+document.getElementById('importClose').addEventListener('click', ()=> closeDialog(document.getElementById('importModal')));
+document.getElementById('importApply').addEventListener('click', ()=>{
+  applyImport(document.getElementById('importText').value);
+});
+document.getElementById('importFile').addEventListener('change', e=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    document.getElementById('importText').value = String(rd.result == null ? '' : rd.result);
+    setImportError('Archivo cargado. Revisa y toca «Validar e importar».');
+  };
+  rd.onerror = ()=> setImportError('No pude leer el archivo.');
+  try{ rd.readAsText(file); }catch(err){ setImportError('No pude leer el archivo.'); }
+});
+
+storageOk = storageAvailable();
+if(!storageOk) showStorageWarning();
+loadData();
 loadState();
 renderAll();
 renderSessionClock();
