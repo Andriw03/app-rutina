@@ -615,7 +615,7 @@
    rutina» en cada día. «Restaurar valores originales» vuelve a esta semilla. */
 const DAYS = [
   { id:1, short:'D1', label:'Empuje', title:'Día 1 · Lunes', focus:'Tren superior — Empuje (hipertrofia) + core',
-    warmup:{title:'Warm-up', duration:'8 min', detail:'Cardio suave 5 min + movilidad de hombro (rotaciones, band pull-apart) 3 min'},
+    warmup:{title:'Warm-up', duration:'8 min', detail:'Cardio suave 5 min + movilidad de hombro (rotaciones, band pull-apart) 2 min + rotación externa de hombro con banda 2×15 (activación de manguito rotador antes de los presses)'},
     cardio:{id:'d1c', title:'Elíptica o caminadora', meta:'10–12 min', totalMin:12,
       detail:'Ritmo moderado. Día de hipertrofia — el cardio aquí es un cierre suave, no un segundo entrenamiento.'}
   },
@@ -680,6 +680,9 @@ const SEED_INVENTORY = [
   {id:"ex-29", name:"Zancada lateral con mancuernas", measure:"reps", sets:3, value:"10", suffix:"por lado", weight:null, unit:"kg", rest:75, note:"Mimetiza mecánica de dolyo chagi (patada circular)", yt:"R8jArZG2J6Q"},
   {id:"ex-30", name:"Elevación de talones (pantorrilla)", measure:"reps", sets:3, value:"15–20", suffix:"", weight:null, unit:"kg", rest:45, note:"Para definición — no llevar al fallo", yt:"4HQ8Am9IuME"},
   {id:"ex-31", name:"Cable woodchopper", measure:"reps", sets:3, value:"12", suffix:"por lado", weight:null, unit:"kg", rest:45, note:"", yt:"he4IhLc1d5k"},
+  {id:"ex-32", name:"Y-raise en banco inclinado (mancuernas livianas)", measure:"reps", sets:2, value:"12–15", suffix:"", weight:null, unit:"kg", rest:45, note:"Trapecio inferior — estabilizador de escápula", yt:""},
+  {id:"ex-33", name:"Pallof press", measure:"reps", sets:3, value:"10", suffix:"por lado", weight:null, unit:"kg", rest:30, note:"", yt:""},
+  {id:"ex-34", name:"Dead bug", measure:"reps", sets:2, value:"10", suffix:"por lado", weight:null, unit:"kg", rest:30, note:"", yt:""},
 ];
 
 const SEED_ROUTINES = {
@@ -688,16 +691,16 @@ const SEED_ROUTINES = {
     {title:"Abdominales", ids:["ex-7", "ex-8"]},
   ],
   2: [
-    {title:"Fuerza", ids:["ex-9", "ex-10", "ex-11", "ex-12", "ex-13", "ex-14"]},
+    {title:"Fuerza", ids:["ex-9", "ex-10", "ex-11", "ex-12", "ex-32", "ex-13", "ex-14"]},
     {title:"Abdominales", ids:["ex-7", "ex-15"]},
   ],
   3: [
     {title:"Fuerza · ritmo de resistencia", ids:["ex-16", "ex-17", "ex-18", "ex-19", "ex-20", "ex-21"]},
-    {title:"Abdominales", ids:["ex-15", "ex-22", "ex-23"]},
+    {title:"Abdominales", ids:["ex-15", "ex-33", "ex-22", "ex-23"]},
   ],
   4: [
     {title:"Fuerza y potencia", ids:["ex-24", "ex-25", "ex-26", "ex-27", "ex-28", "ex-29", "ex-30"]},
-    {title:"Abdominales", ids:["ex-31", "ex-7"]},
+    {title:"Abdominales", ids:["ex-31", "ex-34", "ex-7"]},
   ],
 };
 

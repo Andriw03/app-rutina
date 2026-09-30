@@ -22,7 +22,7 @@ Regla de oro si el TKD se mueve a lunes o viernes: el día de tren inferior (Dí
 
 ## Día 1 — Lunes: Tren Superior Empuje (Hipertrofia) + Core
 
-**Warm-up (8 min):** cardio suave 5 min + movilidad de hombro (rotaciones, band pull-apart) 3 min
+**Warm-up (8 min):** cardio suave 5 min + movilidad de hombro (rotaciones, band pull-apart) 2 min + rotación externa de hombro con banda 2×15 (activación de manguito rotador antes de los presses)
 
 **Bloque 1 — Fuerza (máquinas/mancuernas):**
 
@@ -58,6 +58,7 @@ Elíptica o caminadora a ritmo moderado. Día de hipertrofia — el cardio aquí
 | Remo en máquina (agarre neutro) | 4×10–12 | 75s | |
 | Remo horizontal en polea baja | 3×12 | 60s | |
 | Face pull | 3×15 | 45s | Clave para salud de hombro tras el empuje del lunes |
+| Y-raise en banco inclinado (mancuernas livianas) | 2×12–15 | 45s | Trapecio inferior — estabilizador de escápula |
 | Curl bíceps con mancuerna | 3×10–12 | 60s | |
 | Curl martillo | 3×12 | 45s | |
 
@@ -97,6 +98,7 @@ Elíptica o caminadora a ritmo moderado. Día de hipertrofia — el cardio aquí
 | Ejercicio | Series x Reps | Descanso |
 |---|---|---|
 | Russian twist con peso | 3×15 por lado | 30s |
+| Pallof press | 3×10 por lado | 30s |
 | Plancha lateral | 3×30s por lado | 30s |
 | Mountain climbers | 3×30s | 30s |
 
@@ -128,6 +130,7 @@ Elíptica o caminadora a ritmo moderado. Día de hipertrofia — el cardio aquí
 | Ejercicio | Series x Reps | Descanso |
 |---|---|---|
 | Cable woodchopper | 3×12 por lado | 45s |
+| Dead bug | 2×10 por lado | 30s |
 | Plancha frontal | 3×40s | 30s |
 
 **Bloque 3 — Cardio final (8–10 min):**

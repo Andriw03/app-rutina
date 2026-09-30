@@ -207,7 +207,7 @@ embebido de YouTube, y este último solo se carga cuando abres un video.
   solo vive la semilla de la primera carga:
   - `DAYS` → metadatos de cada día (título, foco, warm-up, cardio final, nota al pie). El
     warm-up y el cardio son bloques fijos y no salen del inventario.
-  - `SEED_INVENTORY` → los 31 ejercicios iniciales.
+  - `SEED_INVENTORY` → los 34 ejercicios iniciales.
   - `SEED_ROUTINES` → qué ids van en cada bloque de cada día.
   Cambiar la semilla **no** afecta a quien ya abrió la app: sus datos mandan. Para volver a la
   semilla está *Restaurar valores originales*.
