@@ -426,6 +426,48 @@
   .yt-preview img{width:92px; height:auto; border-radius:8px; border:1px solid var(--border);}
   .yt-preview span{font-size:11px; color:var(--text-muted);}
 
+  /* ---------- CHIP DE PESO Y HOJA DE PESO ---------- */
+  .weight-chip{
+    cursor:pointer; position:relative; font-weight:600;
+    border-color:#3a4450; color:var(--text);
+  }
+  /* Mismo truco que .chk y .rest-btn: 40px de alto táctil sin agrandar el chip */
+  .weight-chip::after{content:''; position:absolute; left:0; right:0; top:-9px; bottom:-9px;}
+  .weight-chip:active{transform:scale(0.96);}
+  .weight-chip.empty{
+    background:transparent; border-style:dashed; color:var(--text-muted); font-weight:400;
+  }
+  .card.done .weight-chip{border-color:#2f4a3a;}
+  .wm-name{
+    margin:0 0 14px; font-size:13.5px; color:var(--text-muted); line-height:1.4;
+  }
+  .wm-row{display:flex; align-items:stretch; gap:10px; margin-bottom:12px;}
+  .wm-step{
+    flex:none; width:64px; border-radius:12px; padding:0;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:14px; cursor:pointer;
+  }
+  .wm-step:active{transform:scale(0.95);}
+  .wm-input{
+    flex:1; min-width:0; height:64px; text-align:center;
+    font-size:30px; font-weight:600; padding:0 6px;
+  }
+  /* sin flechitas del input number: estorban con el pulgar */
+  .wm-input::-webkit-outer-spin-button,
+  .wm-input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
+  .wm-input{appearance:textfield; -moz-appearance:textfield;}
+  .wm-units{display:flex; gap:8px; margin-bottom:14px;}
+  .unit-btn{
+    flex:1; min-height:44px; border-radius:10px; cursor:pointer;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-muted);
+    font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:13px;
+  }
+  .unit-btn[aria-pressed="true"]{
+    background:var(--teal-dim); border-color:#1c4d47; color:var(--teal);
+  }
+  .wm-actions{display:flex; gap:10px; margin-top:8px;}
+  .wm-actions .ghost-btn{flex:1; min-height:44px;}
+
   /* ---------- SECCIÓN DATOS ---------- */
   .data-box{
     background:var(--surface); border:1px solid var(--border);
@@ -545,6 +587,10 @@
       <p>Los ejercicios viven en un solo lugar: la pestaña <b style="color:var(--text)">INV</b> (Inventario).
       Ahí editas series, reps o tiempo, peso, descanso, nota y video, y el cambio se ve en todos los días
       que usan ese ejercicio.</p>
+      <p><b style="color:var(--text)">El peso se anota desde la tarjeta:</b> toca el chip
+      <i>+ peso</i> (o el peso que ya tenga) y ajústalo con − / + o escribiéndolo. Queda guardado
+      para la próxima sesión y para todos los días que usan ese ejercicio, así no tienes que
+      acordarte de cuánto levantaste.</p>
       <p>Cada día guarda solo la lista ordenada de ejercicios. Con <b style="color:var(--text)">«Editar rutina»</b>
       puedes agregar, quitar y reordenar (↑ ↓; en el borde de un bloque el ejercicio pasa al bloque vecino).
       El warm-up y el cardio final son fijos: no salen del inventario.</p>
@@ -568,6 +614,30 @@
   <div class="video-frame-wrap" id="videoFrameWrap"></div>
   <div class="video-modal-actions">
     <a class="yt-link" id="videoYtLink" href="#" target="_blank" rel="noopener">Abrir en YouTube ↗</a>
+  </div>
+</div>
+
+<!-- Peso rápido: se abre tocando el chip de peso de cualquier ejercicio -->
+<div class="modal" id="weightModal" role="dialog" aria-modal="true" aria-labelledby="weightTitle" hidden>
+  <div class="modal-sheet">
+    <h3 id="weightTitle">Peso que levantaste</h3>
+    <p class="wm-name" id="weightExName"></p>
+    <div class="wm-row">
+      <button type="button" class="wm-step" id="weightMinus" aria-label="Restar">−2.5</button>
+      <input class="inp wm-input mono" id="weightInput" type="number" inputmode="decimal"
+        min="0" step="2.5" placeholder="0" aria-label="Peso">
+      <button type="button" class="wm-step" id="weightPlus" aria-label="Sumar">+2.5</button>
+    </div>
+    <div class="wm-units" role="group" aria-label="Unidad de peso">
+      <button type="button" class="unit-btn" data-unit="kg" aria-pressed="true">kg</button>
+      <button type="button" class="unit-btn" data-unit="lb" aria-pressed="false">lb</button>
+    </div>
+    <p class="f-err" id="weightErr" role="alert" hidden></p>
+    <button class="primary-btn" id="weightSave">Guardar</button>
+    <div class="wm-actions">
+      <button class="ghost-btn" id="weightClear">Sin peso</button>
+      <button class="ghost-btn" id="weightCancel">Cancelar</button>
+    </div>
   </div>
 </div>
 
@@ -1130,9 +1200,19 @@ function selectTab(key){
 /* ============ RENDER TARJETA DE EJERCICIO ============ */
 /* `it` es un ejercicio del inventario: la tarjeta lee series, valor, peso,
    descanso, nota y video de ahí, nunca de una copia por día. */
+/* Chip de peso: se toca para anotar lo que estás levantando hoy, sin salir
+   del día. Si no hay peso todavía, invita a ponerlo en vez de desaparecer. */
+function weightChip(it){
+  const w = weightLabel(it);
+  const label = w
+    ? `Peso de ${it.name}: ${w}. Tocar para cambiarlo`
+    : `Anotar el peso de ${it.name}`;
+  return `<button type="button" class="chip weight-chip${w ? '' : ' empty'}"
+    data-weight="${esc(it.id)}" aria-label="${esc(label)}">${w ? esc(w) : '+ peso'}</button>`;
+}
+
 function exCard(it){
   const isDone = state.completed[state.currentDay].has(it.id);
-  const w = weightLabel(it);
   return `
   <div class="card ${isDone?'done':''}" data-id="${esc(it.id)}">
     ${videoThumb(it.yt, it.name)}
@@ -1144,8 +1224,9 @@ function exCard(it){
       </div>
       <div class="meta-row">
         <span class="chip">${esc(setsLabel(it))}</span>
-        ${w ? `<span class="chip">${esc(w)}</span>` : ''}
-        ${it.rest > 0 ? `<button type="button" class="rest-btn" data-rest="${esc(it.id)}" data-sec="${it.rest}">⏱ Descanso ${it.rest}s</button>` : ''}
+        ${weightChip(it)}
+        ${it.rest > 0 ? `<button type="button" class="rest-btn" data-rest="${esc(it.id)}" data-sec="${it.rest}"
+          aria-label="Cronómetro de descanso de ${it.rest} segundos">⏱ ${it.rest}s</button>` : ''}
       </div>
       ${it.note ? `<div class="note">${esc(it.note)}</div>` : ''}
     </div>
@@ -1324,6 +1405,9 @@ function wireDayEvents(day){
   });
   document.querySelectorAll('[data-yt]').forEach(thumb=>{
     thumb.addEventListener('click', ()=> openVideo(thumb.dataset.yt, thumb.dataset.title, thumb));
+  });
+  document.querySelectorAll('[data-weight]').forEach(chip=>{
+    chip.addEventListener('click', ()=> openWeight(chip.dataset.weight, chip));
   });
 
   document.querySelectorAll('[data-cardio-sec]').forEach(btn=>{
@@ -1827,7 +1911,6 @@ function invCard(it){
   const usedTxt = used.length
     ? 'En ' + used.map(id=>dayById(id).short).join(' · ')
     : 'Sin usar en ninguna rutina';
-  const w = weightLabel(it);
   return `
   <div class="inv-card" data-inv="${esc(it.id)}">
     ${videoThumb(it.yt, it.name)}
@@ -1835,7 +1918,7 @@ function invCard(it){
       <div class="ic-name">${esc(it.name)}</div>
       <div class="meta-row">
         <span class="chip">${esc(setsLabel(it))}</span>
-        ${w ? `<span class="chip">${esc(w)}</span>` : ''}
+        ${weightChip(it)}
         <span class="chip">⏱ ${it.rest}s</span>
       </div>
       <div class="ic-used mono">${esc(usedTxt)}</div>
@@ -2046,6 +2129,9 @@ function wireInvList(){
   list.querySelectorAll('[data-yt]').forEach(thumb=>{
     thumb.addEventListener('click', ()=> openVideo(thumb.dataset.yt, thumb.dataset.title, thumb));
   });
+  list.querySelectorAll('[data-weight]').forEach(chip=>{
+    chip.addEventListener('click', ()=> openWeight(chip.dataset.weight, chip));
+  });
   list.querySelectorAll('[data-edit-inv]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       state.invEdit = btn.dataset.editInv;
@@ -2097,6 +2183,100 @@ function focusForm(){
   const name = fld(f, 'name');
   if(name) name.focus();
   f.scrollIntoView({block:'nearest'});
+}
+
+/* ============ PESO RÁPIDO ============
+   El peso vive en el inventario, así que anotarlo desde la tarjeta del día lo
+   deja guardado para la próxima sesión y para todos los días que usan ese
+   ejercicio. Pensado para usarse entre series: pocos toques y botones grandes. */
+const weightEdit = {id:null, unit:'kg'};
+function weightStep(unit){ return unit === 'lb' ? 5 : 2.5; }
+
+function setWeightError(msg){
+  const p = document.getElementById('weightErr');
+  p.textContent = msg;
+  p.hidden = !msg;
+}
+
+function openWeight(id, trigger){
+  const it = invById(id);
+  if(!it) return;
+  weightEdit.id = id;
+  weightEdit.unit = it.unit === 'lb' ? 'lb' : 'kg';
+  document.getElementById('weightExName').textContent = it.name;
+  const input = document.getElementById('weightInput');
+  input.value = (it.weight === null || it.weight === undefined) ? '' : it.weight;
+  setWeightError('');
+  paintWeightUnits();
+  openDialog(document.getElementById('weightModal'), input, trigger);
+  try{ input.select(); }catch(e){}
+}
+
+function paintWeightUnits(){
+  const step = weightStep(weightEdit.unit);
+  document.querySelectorAll('#weightModal .unit-btn').forEach(b=>{
+    b.setAttribute('aria-pressed', String(b.dataset.unit === weightEdit.unit));
+  });
+  document.getElementById('weightMinus').textContent = '−' + step;
+  document.getElementById('weightPlus').textContent = '+' + step;
+  document.getElementById('weightInput').step = step;
+}
+
+function bumpWeight(dir){
+  const input = document.getElementById('weightInput');
+  const step = weightStep(weightEdit.unit);
+  const cur = parseNum(input.value);
+  const next = Math.max(0, Math.round(((cur === null ? 0 : cur) + dir*step) * 100) / 100);
+  input.value = next;
+  setWeightError('');
+}
+
+function saveWeight(){
+  const it = invById(weightEdit.id);
+  if(!it) return;
+  const raw = document.getElementById('weightInput').value;
+  if(String(raw).trim() === ''){ clearWeight(); return; }   // vacío = peso corporal
+  const n = parseNum(raw);
+  if(n === null || n < 0){
+    setWeightError('Escribe un número de 0 o más, o toca «Sin peso».');
+    return;
+  }
+  it.weight = n;
+  it.unit = weightEdit.unit;
+  saveData();
+  closeDialog(document.getElementById('weightModal'));
+  refreshWeightChips(it);
+  announce(`${it.name}: ${weightLabel(it)}`);
+}
+
+function clearWeight(){
+  const it = invById(weightEdit.id);
+  if(!it) return;
+  it.weight = null;
+  saveData();
+  closeDialog(document.getElementById('weightModal'));
+  refreshWeightChips(it);
+  announce(`${it.name}: sin peso`);
+}
+
+/* Repinta los chips en su lugar en vez de re-renderizar el día: a mitad del
+   entreno no queremos perder la posición del scroll. */
+function refreshWeightChips(it){
+  const w = weightLabel(it);
+  document.querySelectorAll(`[data-weight="${CSS.escape(it.id)}"]`).forEach(chip=>{
+    chip.textContent = w || '+ peso';
+    chip.classList.toggle('empty', !w);
+    chip.setAttribute('aria-label', w
+      ? `Peso de ${it.name}: ${w}. Tocar para cambiarlo`
+      : `Anotar el peso de ${it.name}`);
+  });
+  // el formulario del inventario, si está abierto, muestra el valor nuevo
+  const f = document.getElementById('exForm');
+  if(f && f.dataset.editing === it.id){
+    const wf = fld(f, 'weight'), uf = fld(f, 'unit');
+    if(wf) wf.value = it.weight === null ? '' : it.weight;
+    if(uf) uf.value = it.unit;
+  }
 }
 
 /* ============ SELECTOR DE EJERCICIOS (modo edición) ============ */
@@ -2241,6 +2421,22 @@ document.getElementById('timerPause').addEventListener('click', ()=>{
 });
 document.getElementById('timerPlus').addEventListener('click', ()=> adjustTimer(15));
 document.getElementById('timerMinus').addEventListener('click', ()=> adjustTimer(-15));
+
+/* Peso rápido */
+document.getElementById('weightMinus').addEventListener('click', ()=> bumpWeight(-1));
+document.getElementById('weightPlus').addEventListener('click', ()=> bumpWeight(1));
+document.getElementById('weightSave').addEventListener('click', saveWeight);
+document.getElementById('weightClear').addEventListener('click', clearWeight);
+document.getElementById('weightCancel').addEventListener('click', ()=> closeDialog(document.getElementById('weightModal')));
+document.querySelectorAll('#weightModal .unit-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    weightEdit.unit = btn.dataset.unit === 'lb' ? 'lb' : 'kg';
+    paintWeightUnits();
+  });
+});
+document.getElementById('weightInput').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); saveWeight(); }
+});
 
 /* Selector de ejercicios e importación */
 document.getElementById('pickerClose').addEventListener('click', ()=> closeDialog(document.getElementById('pickerModal')));

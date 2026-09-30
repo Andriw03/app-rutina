@@ -59,6 +59,10 @@ python3 -m http.server 8000
   nombre, tipo de medida (repeticiones o tiempo), series, valor (admite rangos como `8–10`),
   detalle opcional (`por lado`, `m`), peso con unidad (vacío = peso corporal), descanso, nota y
   link de YouTube. Se crean, editan y eliminan desde la app, con buscador y validación.
+- **Peso a un toque**: cada tarjeta trae un chip con el peso que estás levantando. Se toca y se
+  ajusta con − / + (2.5 kg, o 5 lb) o escribiéndolo, sin salir del día ni perder el scroll. Como
+  el peso vive en el inventario, queda para la próxima sesión y para todos los días que usan ese
+  ejercicio. Vacío = peso corporal, y el chip muestra *+ peso* invitando a anotarlo.
 - **Rutina diaria editable**: el botón *Editar rutina* de cada día permite agregar (selector con
   búsqueda que excluye lo ya incluido), quitar y reordenar con ↑ ↓ — en el borde de un bloque el
   ejercicio pasa al bloque vecino. Cada día guarda **solo ids**; series, peso, descanso y video

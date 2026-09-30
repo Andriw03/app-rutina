@@ -1,6 +1,6 @@
 /* Service worker de Rutina TKD.
    Sube CACHE_VERSION cada vez que cambies index.html o los assets. */
-const CACHE_VERSION = 'rutina-tkd-v4';
+const CACHE_VERSION = 'rutina-tkd-v5';
 const THUMBS_CACHE  = 'rutina-tkd-thumbs-v1';
 const THUMBS_MAX    = 80;
 
